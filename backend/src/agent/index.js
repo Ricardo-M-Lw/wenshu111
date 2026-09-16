@@ -1,6 +1,7 @@
 // 问数智能体 - 对外统一入口
 // 负责：组装上下文 → 安全护栏 → 选择提供方（大模型 / 规则引擎）→ 记忆更新
 
+const config = require('../config');
 const guardrail = require('./guardrail');
 const memory = require('./memory');
 const records = require('./records');
@@ -11,15 +12,52 @@ const openai = require('./providers/openai');
 const { lessons } = require('../models/lessons');
 const { knowledgePoints, learningSessions } = require('../models/mockData');
 
+// ---------------------------------------------------------------------------
+// 大模型全局预算闸门
+// 线上是公开地址，任何人都能调 /api/agent/chat，免费用户还能反复注册，
+// 光靠「每人每天 10 次」拦不住。这里再加一层按自然日的全局闸门：
+// 统计真实发出的大模型请求数，超过 LLM_DAILY_CAP 就自动退回内置规则引擎——
+// 网站功能照常，只是回答换成离线话术，避免 DeepSeek 额度被刷爆。
+// ---------------------------------------------------------------------------
+const llmBudget = { day: '', used: 0 };
+
+function dayKey() {
+  const now = new Date();
+  return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+}
+
+function llmBudgetState() {
+  if (llmBudget.day !== dayKey()) {
+    llmBudget.day = dayKey();
+    llmBudget.used = 0;
+  }
+  const cap = config.ai.dailyCap;
+  return {
+    day: llmBudget.day,
+    used: llmBudget.used,
+    cap: cap,
+    // -1 表示不限量
+    remaining: cap > 0 ? Math.max(cap - llmBudget.used, 0) : -1
+  };
+}
+
+function consumeLlmBudget() {
+  const state = llmBudgetState();
+  if (state.cap > 0 && state.used >= state.cap) return false;
+  llmBudget.used += 1;
+  return true;
+}
+
 function providerInfo() {
   const cfg = openai.config();
   const forceRules = process.env.AGENT_PROVIDER === 'rules';
   const useModel = openai.available() && !forceRules;
   return {
     name: useModel ? 'openai' : 'rules',
-    model: useModel ? cfg.model : '内置规则引擎（离线可用）',
+    model: useModel ? openai.activeModelName() : '内置规则引擎（离线可用）',
     hasApiKey: openai.available(),
-    baseUrl: useModel ? cfg.baseUrl : null
+    baseUrl: useModel ? cfg.baseUrl : null,
+    budget: llmBudgetState()
   };
 }
 
@@ -83,11 +121,19 @@ async function reply(options) {
   }
 
   const info = providerInfo();
+  const useModel = info.name === 'openai' && consumeLlmBudget();
   let result;
   try {
-    result = info.name === 'openai'
-      ? await openai.respond(ctx, message, memory.history(userId, ctx.kpId))
-      : await rules.respond(ctx, message);
+    if (useModel) {
+      result = await openai.respond(ctx, message, memory.history(userId, ctx.kpId));
+    } else {
+      result = await rules.respond(ctx, message);
+      if (info.name === 'openai') {
+        // 有 Key 但今日全局额度已用满：退回规则引擎，并把原因带回前端
+        result.degraded = true;
+        result.degradeReason = '今日大模型调用额度已用满，已自动切回离线规则引擎';
+      }
+    }
   } catch (err) {
     console.warn('[agent] 大模型调用失败，已自动降级到规则引擎：', err.message);
     result = await rules.respond(ctx, message);
@@ -151,7 +197,7 @@ async function reply(options) {
     persona: ctx.persona,
     personaName: personas.get(ctx.persona).name,
     provider: result.provider || info.name,
-    model: info.model,
+    model: result.provider === 'openai' ? openai.activeModelName() : '内置规则引擎（离线可用）',
     profile: memory.getProfile(userId),
     step: {
       index: ctx.stepIndex,

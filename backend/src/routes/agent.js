@@ -37,6 +37,7 @@ function metaOf(result) {
     guardType: result.guardType || null,
     intent: result.intent || null,
     degraded: !!result.degraded,
+    degradeReason: result.degradeReason || null,   // 降级原因（额度用满 / 大模型报错），方便排查
     toolCalls: (result.toolCalls || []).map(call => ({ name: call.name, args: call.args || {} })),
     quickReplies: result.quickReplies || [],
     effects: result.effects || {},

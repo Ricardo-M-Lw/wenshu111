@@ -1,0 +1,54 @@
+# ===========================================================================
+# 问数星途 · Render 免费实例保活
+# ---------------------------------------------------------------------------
+# 为什么需要：Render 免费档 Web Service 闲置约 15 分钟就会休眠，
+#   下一次访问要等 30~60 秒冷启动。这个工作流每 5 分钟从 GitHub 云端
+#   探一次 /api/health，让实例一直有流量，别人点开就是秒开。
+#
+# 三个注意点：
+#   1) 定时任务只认默认分支上的这个文件，改完必须推到 main 才会生效。
+#   2) GitHub 的定时任务在高峰期可能延迟几分钟，所以间隔取 5 分钟
+#      （Render 是闲置 15 分钟才休眠，留了 3 倍余量）。
+#   3) 公开仓库连续 60 天零提交时 GitHub 会自动暂停定时任务，
+#      收到邮件点一下 Enable 即可；也可以在 cron-job.org / UptimeRobot
+#      再加一条做双保险（见 部署文档.md「方案 D · 保活」）。
+# ===========================================================================
+name: Render 保活
+
+on:
+  schedule:
+    # 每 5 分钟一次（GitHub 的 cron 用 UTC，与具体时区无关）
+    - cron: '*/5 * * * *'
+  workflow_dispatch:   # 也支持在 Actions 页面手动点一次
+
+permissions:
+  contents: read
+
+concurrency:
+  group: render-keepalive
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    name: ping /api/health
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 探测线上站点
+        env:
+          HEALTH_URL: https://wenshu-xingtu.onrender.com/api/health
+        run: |
+          set -u
+          for attempt in 1 2 3; do
+            code=$(curl -sS -o /tmp/health.json -w '%{http_code}' --max-time 60 "$HEALTH_URL" || echo 000)
+            echo "第 $attempt 次探测：HTTP $code"
+            if [ "$code" = "200" ]; then
+              cat /tmp/health.json
+              echo "保活成功"
+              exit 0
+            fi
+            # 冷启动可能要 30~60 秒，等一会儿再补一枪
+            sleep 20
+          done
+          # 探活失败不把仓库 CI 标红，只出一条警告
+          echo "::warning title=保活探测失败::连续 3 次没拿到 200，去 Render 控制台看下服务状态"

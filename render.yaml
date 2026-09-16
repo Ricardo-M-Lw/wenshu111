@@ -23,17 +23,30 @@ services:
       # Render 自动生成 256 位随机串（字符串长度满足后端「生产环境 >= 32 位」的启动护栏）
       - key: JWT_SECRET
         generateValue: true
-      # 免费档默认走离线规则引擎：公开地址谁都能调 /api/agent/chat，
-      # 挂着真实 DeepSeek Key 会被刷爆额度。要用大模型就把这两行删掉并填 LLM_API_KEY。
-      - key: AGENT_PROVIDER
-        value: rules
+      # ---------------------------------------------------------------------
+      # 智能体大模型（DeepSeek）
+      # AGENT_PROVIDER 不设 = 自动：有 Key 就走大模型，没 Key 自动降级规则引擎。
+      # 想临时关掉大模型（无网演示 / 省额度），把下面两行的注释打开即可。
+      # ---------------------------------------------------------------------
+      # - key: AGENT_PROVIDER
+      #   value: rules
       - key: AGENT_FREE_DAILY
         value: "10"
-      # sync: false = 值不存在这个文件里，部署时在 Render 控制台手填（密钥不进 Git）
+      # sync: false = 值不写进这个文件，部署时在 Render 控制台手填（密钥不进 Git）
       - key: LLM_API_KEY
         sync: false
       - key: LLM_BASE_URL
         value: https://api.deepseek.com/v1
       - key: LLM_MODEL
         value: deepseek-flash
+      # 模型名兜底链：上面的模型在当前账号不存在时依次回退，不用改代码
+      - key: LLM_MODEL_FALLBACKS
+        value: deepseek-chat,deepseek-reasoner
+      # 云端首包可能慢，超时给宽一点
+      - key: LLM_TIMEOUT
+        value: "45000"
+      # 全局每日大模型调用上限：公开地址谁都能调，防止额度被陌生人刷爆；
+      # 用满后自动退回离线规则引擎，网站功能不受影响。0 表示不限量。
+      - key: LLM_DAILY_CAP
+        value: "300"
       # 注：PORT 不用设，Render 会自动注入，后端读的是 process.env.PORT

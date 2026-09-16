@@ -70,8 +70,12 @@ const config = {
     apiKey: text(process.env.LLM_API_KEY, ''),
     baseUrl: text(process.env.LLM_BASE_URL, 'https://api.deepseek.com/v1'),
     model: text(process.env.LLM_MODEL, 'deepseek-flash'),
+    // 模型名兜底链：配的模型在当前账号不存在时依次回退（见 providers/openai.js）
+    modelFallbacks: text(process.env.LLM_MODEL_FALLBACKS, 'deepseek-chat,deepseek-reasoner'),
     temperature: num(process.env.LLM_TEMPERATURE, 0.6),
-    maxRounds: num(process.env.LLM_MAX_ROUNDS, 3)
+    maxRounds: num(process.env.LLM_MAX_ROUNDS, 3),
+    // 全局每日大模型调用上限：公开部署时防刷额度；<= 0 表示不限量
+    dailyCap: num(process.env.LLM_DAILY_CAP, 300)
   }
 };
 

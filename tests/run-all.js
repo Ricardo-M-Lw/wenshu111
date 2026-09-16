@@ -25,6 +25,7 @@ const SUITES = [
   ['智能体问答冒烟（15 条意图）', 'agent-smoke.js', { selfHost: true }],
   ['智能体多角色冒烟（老师 / 侦探 / 规划师）', 'agent-persona-smoke.js', {}],
   ['AI 对话配额冒烟（免费次数 / 星尘星钻兑换 / 会员不限次）', 'agent-quota-smoke.js', { selfHost: true }],
+  ['大模型额度闸门冒烟（全站每日上限 / 自动降级）', 'llm-budget-smoke.js', { selfHost: true }],
   ['引导式教学骨架冒烟（五步闭环 / 错因矩阵）', 'scaffold-smoke.js', {}],
   ['页面与静态资源检查', 'page-check.js', {}],
   ['前端页面运行冒烟（轻量 DOM）', 'dom-smoke.js', {}],

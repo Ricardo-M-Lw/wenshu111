@@ -78,9 +78,10 @@ wenshu-fullstack/
 ├── tools/                       # 本地工具脚本（零依赖）
 │   ├── prepare-xiaowen-assets.js   # 小问素材：裁到角色边缘 → 等比缩放 → 重编码
 │   ├── pack-for-server.ps1         # 打服务器上传包（排除 node_modules / .pnpm-store / .git / .env）
-│   └── deploy-server.sh            # 云服务器一键部署（Node + systemd + Nginx + 可选 certbot）
+│   ├── deploy-server.sh            # 云服务器一键部署（Node + systemd + Nginx + 可选 certbot）
+│   └── keepalive.ps1               # 本机保活：定时 ping /api/health（-Once / -InstallTask）
 │
-├── tests/                       # 冒烟测试（node tests/run-all.js，11 个套件 / 默认全部离线可跑）
+├── tests/                       # 冒烟测试（node tests/run-all.js，12 个套件 / 默认全部离线可跑）
 │
 ├── backend/                     # 后端（Express.js）
 │   ├── src/
@@ -118,7 +119,8 @@ wenshu-fullstack/
 │
 ├── Dockerfile                   # 生产镜像（路线一 / 路线二共用同一份）
 ├── docker-compose.yml           # 路线二备选：容器方式起服务
-├── render.yaml                  # 路线一：Render Blueprint 一键部署配置
+├── .github/workflows/keepalive.yml  # 云端保活：每 5 分钟 ping /api/health，免费实例不睡
+├── render.yaml                  # 路线一：Render Blueprint 一键部署配置（含 DeepSeek 环境变量）
 ├── fly.toml                     # 路线一备选：Fly.io 配置
 ├── .dockerignore                # 构建上下文排除（重点是 **/.env）
 ├── 部署文档.md                  # 四条部署路线 + 上线自查清单
@@ -380,7 +382,7 @@ curl -X POST http://localhost:3000/api/agent/chat \
 项目自带一套不依赖浏览器和网络的冒烟测试（会自己拉起临时后端）：
 
 ```bash
-node tests/run-all.js                  # 11 个套件，默认用内置规则引擎（离线、结果确定）
+node tests/run-all.js                  # 12 个套件，默认用内置规则引擎（离线、结果确定）
 AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需要外网与 LLM_API_KEY）
 ```
 
@@ -400,8 +402,7 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 | `tests/classroom-ui-smoke.js` | 讲题课堂全流程：黑板 SVG 生成 → 步骤轨道 → 气泡讲解 → 检查点判题 → 推进下一步 |
 | `tests/xiaowen-ui-smoke.js` | 小问 30 态形象、状态机与「喊小问」语音唤醒（含防抖与麦克风让位） |
 | `tests/agent-ui-smoke.js` | 智能体前端全流程：建议 → 流式对话 → 时间戳 / 说话人 → 推荐灵感 → 语音降级 → 工具轨迹 → 反馈 → 切角色 → 报告卡片 |
-| `tests/classroom-ui-smoke.js` | 讲题课堂全流程：黑板图形 → 逐步气泡 → 检查点判题 → 下一步 |
-| `tests/xiaowen-ui-smoke.js` | 小问形象：30 态素材是否齐全、状态机切换与回弹、`data-qw-xiaowen` 跟随、语音唤醒（近音词 / 半句转发 / 防抖 / 让位给按住说话）26 条断言 |
+| `tests/llm-budget-smoke.js` | 大模型额度闸门：全站每日上限生效、超限自动退回离线引擎、降级原因可读、对话配额与大模型额度是两层（11 条断言） |
 
 ## 📡 API 接口文档
 
