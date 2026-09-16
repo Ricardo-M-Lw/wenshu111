@@ -1,0 +1,14 @@
+{
+  "name": "wenshu-web",
+  "version": "1.0.0",
+  "description": "问数 Web 平台 - 多页面应用",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}

@@ -1,0 +1,39 @@
+# ===========================================================================
+# 问数星途 · Render Blueprint（部署路线一：免费托管平台）
+# ---------------------------------------------------------------------------
+# 用法：
+#   1) 把仓库推到 GitHub（backend/.env 已在 .gitignore 里，不会被推上去）
+#   2) Render 控制台 → New + → Blueprint → 选中这个仓库 → Apply
+#   3) 部署完把 Render 给的 https://xxx.onrender.com 发给别人即可
+# 详细图文步骤 / 免费档的坑见 部署文档.md「方案 D」。
+# ===========================================================================
+services:
+  - type: web
+    name: wenshu-xingtu
+    runtime: docker                 # 直接复用仓库根目录的 Dockerfile，一份配置通吃
+    plan: free
+    region: singapore               # 离国内最近；也可改 oregon / ohio / frankfurt
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /api/health    # 后端已实现，返回 {"status":"ok",...}
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Render 自动生成 256 位随机串（字符串长度满足后端「生产环境 >= 32 位」的启动护栏）
+      - key: JWT_SECRET
+        generateValue: true
+      # 免费档默认走离线规则引擎：公开地址谁都能调 /api/agent/chat，
+      # 挂着真实 DeepSeek Key 会被刷爆额度。要用大模型就把这两行删掉并填 LLM_API_KEY。
+      - key: AGENT_PROVIDER
+        value: rules
+      - key: AGENT_FREE_DAILY
+        value: "10"
+      # sync: false = 值不存在这个文件里，部署时在 Render 控制台手填（密钥不进 Git）
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_BASE_URL
+        value: https://api.deepseek.com/v1
+      - key: LLM_MODEL
+        value: deepseek-flash
+      # 注：PORT 不用设，Render 会自动注入，后端读的是 process.env.PORT

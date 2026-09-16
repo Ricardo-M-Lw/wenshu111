@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问数星途 · 管理控制台</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/src/styles/common.css">
+  <link rel="stylesheet" href="/src/styles/space.css">
+  <link rel="stylesheet" href="/src/styles/admin.css">
+  <script src="/src/scripts/auth.js"></script>
+  <script src="/src/scripts/xiaowen.js"></script>
+</head>
+<body class="admin-page qw-deep">
+  <div class="sq-sky" aria-hidden="true"></div>
+  <div class="sq-decor" aria-hidden="true">
+    <span class="sq-comet" style="left:14%;top:12%"></span>
+    <span class="sq-moon" style="right:7%;top:8%"></span>
+    <span class="sq-cloud cool" style="left:3%;bottom:26%;width:180px;height:44px"></span>
+    <span class="sq-cloud warm" style="right:9%;bottom:20%;width:150px;height:38px"></span>
+  </div>
+
+  <div class="ad-shell">
+    <aside class="ad-rail">
+      <a class="ad-brand" href="/pages/admin/console.html">
+        <img src="/assets/images/mascot/xiaowen/idle.png" data-qw-xiaowen="idle" data-qw-xiaowen-still="1" alt="">
+        <span><b>问数星途</b><i>管理控制台 · CONSOLE</i></span>
+      </a>
+
+      <nav class="ad-nav" id="adNav" aria-label="管理模块"></nav>
+
+      <div class="ad-rail-foot">
+        <div class="ad-who" id="adWho"></div>
+        <button type="button" class="ad-logout" id="adLogout">退出登录</button>
+      </div>
+    </aside>
+
+    <div class="ad-main">
+      <header class="ad-head">
+        <div>
+          <h1 id="adTitle">管理控制台</h1>
+          <p id="adSub">正在读取你的权限…</p>
+        </div>
+        <div class="ad-head-actions">
+          <span class="ad-role" id="adRole">—</span>
+          <button type="button" class="ad-theme" data-qw-theme-toggle aria-label="切换白天 / 夜晚模式"><span data-qw-theme-label data-qw-theme-icon>🌤</span></button>
+        </div>
+      </header>
+
+      <main id="adminApp" class="ad-stage">
+        <div class="ad-loading">正在加载控制台…</div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/src/scripts/admin.js"></script>
+  <script src="/src/scripts/space-art.js"></script>
+  <script src="/src/scripts/space.js"></script>
+</body>
+</html>

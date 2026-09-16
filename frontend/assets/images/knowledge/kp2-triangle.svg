@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="三角形内角和为 180 度示意图">
+  <defs>
+    <linearGradient id="kp2bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2BA4A0"/><stop offset="100%" stop-color="#1E8C88"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="160" rx="18" fill="url(#kp2bg)"/>
+  <path d="M70 122L200 42L330 122Z" fill="rgba(255,255,255,0.14)" stroke="#FFFFFF" stroke-width="4" stroke-linejoin="round"/>
+  <g fill="#FFE28A" opacity="0.95">
+    <path d="M70 122a26 26 0 0 0 26-16L70 106Z"/>
+    <path d="M330 122a26 26 0 0 1-25-16L330 106Z"/>
+    <path d="M200 42a30 30 0 0 0-17 10l17 8Z"/>
+  </g>
+  <text x="76" y="112" font-family="'Noto Sans SC',sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">A</text>
+  <text x="196" y="36" font-family="'Noto Sans SC',sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">B</text>
+  <text x="316" y="112" font-family="'Noto Sans SC',sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">C</text>
+  <text x="112" y="146" font-family="'Noto Sans SC',sans-serif" font-size="13" fill="rgba(255,255,255,0.85)">∠A + ∠B + ∠C = 180°</text>
+</svg>

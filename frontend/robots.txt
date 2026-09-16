@@ -1,0 +1,12 @@
+# 问数星途
+User-agent: *
+Allow: /$
+Allow: /index.html
+Allow: /assets/
+Allow: /pages/auth/
+Disallow: /api/
+Disallow: /pages/admin/
+Disallow: /pages/student/
+Disallow: /src/
+
+Sitemap: /sitemap.xml

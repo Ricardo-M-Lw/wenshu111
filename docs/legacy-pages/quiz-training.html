@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://unpkg.com" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      scrollbar-width: none;
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F0F7F7] min-h-screen font-body text-gray-800">
+
+<link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=ZCOOL+QingKe+HuangYou&display=swap" />
+
+<style type="text/tailwindcss">
+  @theme {
+    --color-primary: #2BA4A0;
+    --color-primary-dark: #1E8C88;
+    --color-primary-light: #E0F5F4;
+    --color-accent: #F5A623;
+    --color-accent-light: #FFF3DC;
+    --color-surface: #FFFFFF;
+    --color-dark: #1A2A3A;
+    --color-muted: #8A9BAE;
+    --color-success: #34C759;
+    --color-warning: #FF9500;
+    --color-danger: #FF3B30;
+    --font-display: 'ZCOOL QingKe HuangYou', cursive;
+    --font-body: 'Noto Sans SC', sans-serif;
+  }
+
+  @keyframes correctPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  @keyframes wrongShake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .correct-anim {
+    animation: correctPulse 0.5s ease;
+  }
+  .wrong-anim {
+    animation: wrongShake 0.4s ease;
+  }
+  .num-input:focus {
+    outline: none;
+    border-color: #2BA4A0;
+    box-shadow: 0 0 0 3px rgba(43, 164, 160, 0.15);
+  }
+</style>
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 bg-surface/90 backdrop-blur-md z-50 border-b border-primary/10">
+  <div class="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="#" class="flex items-center gap-2 text-muted hover:text-primary transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span class="text-sm">返回</span>
+      </a>
+      <div class="w-px h-5 bg-gray-200 mx-2"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+          <span class="text-white font-display text-sm">问</span>
+        </div>
+        <span class="font-display text-lg text-dark">标准题训练</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 text-sm text-muted">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>第 <span class="font-semibold text-dark">3</span> / 10 题</span>
+      </div>
+      <div class="w-32 bg-primary/10 rounded-full h-1.5">
+        <div class="h-full bg-primary rounded-full transition-all" style="width:30%"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-16 max-w-4xl mx-auto px-6">
+
+  <!-- Topic Badge -->
+  <div class="flex items-center gap-2 mb-6">
+    <span class="bg-primary-light text-primary text-xs font-medium px-3 py-1 rounded-full">勾股定理</span>
+    <span class="bg-accent-light text-accent text-xs font-medium px-3 py-1 rounded-full">计算题</span>
+    <span class="text-muted text-xs ml-auto flex items-center gap-1">
+      <i data-lucide="clock" class="w-3.5 h-3.5"></i> 用时 01:24
+    </span>
+  </div>
+
+  <!-- Question Card -->
+  <div class="bg-surface rounded-2xl border border-primary/5 p-8 mb-6 relative">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center flex-shrink-0">
+        <span class="text-white font-display text-lg">3</span>
+      </div>
+      <div class="flex-1">
+        <h2 class="text-lg font-semibold text-dark leading-relaxed mb-4">
+          在直角三角形 ABC 中，∠C = 90°，已知 AC = 3cm，BC = 4cm，求斜边 AB 的长度。
+        </h2>
+        <!-- Diagram -->
+        <div class="bg-[#F8FAFA] rounded-xl p-6 inline-block">
+          <svg viewBox="0 0 240 180" class="w-56">
+            <!-- Triangle -->
+            <polygon points="30,150 210,150 210,40" fill="none" stroke="#2BA4A0" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Right angle mark -->
+            <polyline points="190,150 190,130 210,130" fill="none" stroke="#2BA4A0" stroke-width="1.5"/>
+            <!-- Labels -->
+            <text x="120" y="170" fill="#1A2A3A" font-size="14" text-anchor="middle" font-weight="500">AC = 3</text>
+            <text x="225" y="100" fill="#1A2A3A" font-size="14" text-anchor="start" font-weight="500">BC = 4</text>
+            <text x="105" y="88" fill="#F5A623" font-size="15" text-anchor="middle" font-weight="700">AB = ?</text>
+            <!-- Vertex labels -->
+            <text x="18" y="158" fill="#8A9BAE" font-size="13" font-weight="500">A</text>
+            <text x="215" y="165" fill="#8A9BAE" font-size="13" font-weight="500">C</text>
+            <text x="215" y="35" fill="#8A9BAE" font-size="13" font-weight="500">B</text>
+            <!-- Hypotenuse dashed highlight -->
+            <line x1="30" y1="150" x2="210" y2="40" stroke="#F5A623" stroke-width="2" stroke-dasharray="6 4"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Answer Input Area -->
+  <div class="bg-surface rounded-2xl border border-primary/5 p-8 mb-6">
+    <h3 class="text-sm font-semibold text-dark mb-4 flex items-center gap-2">
+      <i data-lucide="pen-line" class="w-4 h-4 text-primary"></i>
+      输入你的答案
+    </h3>
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 flex-1">
+        <span class="text-dark font-medium">AB =</span>
+        <input type="text" class="num-input w-32 h-12 border-2 border-gray-200 rounded-xl px-4 text-center text-xl font-semibold text-dark" placeholder="?" />
+        <span class="text-dark font-medium">cm</span>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex items-center justify-between mt-6 pt-5 border-t border-gray-100">
+      <div class="flex items-center gap-3">
+        <button class="flex items-center gap-2 text-accent hover:text-accent/80 text-sm font-medium transition-colors bg-accent-light px-4 py-2 rounded-xl">
+          <i data-lucide="lightbulb" class="w-4 h-4"></i> 提示一下
+        </button>
+        <button class="flex items-center gap-2 text-muted hover:text-primary text-sm transition-colors bg-gray-50 px-4 py-2 rounded-xl">
+          <i data-lucide="camera" class="w-4 h-4"></i> 拍照上传
+          <span class="text-xs text-muted/60 bg-white px-1.5 py-0.5 rounded">P1</span>
+        </button>
+      </div>
+      <button class="bg-primary hover:bg-primary-dark text-white font-semibold px-10 py-3 rounded-xl transition-colors text-sm">
+        提交答案
+      </button>
+    </div>
+  </div>
+
+  <!-- Feedback Area: Correct Answer -->
+  <div class="correct-anim bg-success/5 border-2 border-success/20 rounded-2xl p-6 mb-6">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center">
+        <i data-lucide="check" class="w-6 h-6 text-success"></i>
+      </div>
+      <div>
+        <h3 class="text-success font-semibold text-lg">回答正确！🎉</h3>
+        <p class="text-success/70 text-sm">太棒了，你完全掌握了勾股定理的基本计算。</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-4 mt-3">
+      <p class="text-sm text-dark leading-relaxed">
+        <span class="font-semibold text-primary">解题思路：</span>
+        根据勾股定理 a² + b² = c²，代入 AC = 3，BC = 4：
+      </p>
+      <p class="text-sm text-dark mt-2 font-mono bg-primary-light/50 px-3 py-2 rounded-lg">
+        AB² = AC² + BC² = 3² + 4² = 9 + 16 = 25 → AB = 5cm
+      </p>
+    </div>
+  </div>
+
+  <!-- Feedback Area: Wrong Answer (示例) -->
+  <div class="wrong-anim bg-danger/5 border-2 border-danger/20 rounded-2xl p-6">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="w-10 h-10 rounded-full bg-danger/15 flex items-center justify-center">
+        <i data-lucide="x" class="w-6 h-6 text-danger"></i>
+      </div>
+      <div>
+        <h3 class="text-danger font-semibold text-lg">答案不太对哦</h3>
+        <p class="text-danger/70 text-sm">别着急，我们一起来分析一下。</p>
+      </div>
+    </div>
+    <div class="bg-white rounded-xl p-4 mt-3 space-y-3">
+      <div class="flex items-start gap-2">
+        <span class="w-5 h-5 rounded-full bg-accent-light flex items-center justify-center flex-shrink-0 mt-0.5">
+          <span class="text-accent text-xs font-bold">1</span>
+        </span>
+        <p class="text-sm text-dark">你的答案是 7，但我们来看看是不是直接把两条边加起来了？</p>
+      </div>
+      <div class="flex items-start gap-2">
+        <span class="w-5 h-5 rounded-full bg-accent-light flex items-center justify-center flex-shrink-0 mt-0.5">
+          <span class="text-accent text-xs font-bold">2</span>
+        </span>
+        <p class="text-sm text-dark">勾股定理说的是<strong>平方和</strong>的关系。试试先算 3² 和 4²，再相加？</p>
+      </div>
+      <div class="flex items-center gap-3 pt-2">
+        <button class="bg-primary hover:bg-primary-dark text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors">
+          重新作答
+        </button>
+        <button class="text-accent hover:text-accent/80 text-sm font-medium transition-colors">
+          查看错因分析 →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question Navigation Dots -->
+  <div class="flex items-center justify-center gap-2 mt-10">
+    <div class="w-3 h-3 rounded-full bg-success"></div>
+    <div class="w-3 h-3 rounded-full bg-success"></div>
+    <div class="w-3 h-3 rounded-full bg-primary ring-2 ring-primary/30 ring-offset-2"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+    <div class="w-3 h-3 rounded-full bg-gray-200"></div>
+  </div>
+
+</main>
+
+</body>
+<script>if (window.lucide) lucide.createIcons();</script>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问数星途 · 对话式数学陪学</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/src/styles/common.css">
+  <link rel="stylesheet" href="/src/styles/space.css">
+  <script src="/src/scripts/auth.js"></script>
+  <script src="/src/scripts/xiaowen.js"></script>
+  <script src="/src/scripts/space-art.js"></script>
+  <script src="/src/scripts/space.js"></script>
+</head>
+<body class="qw-deep">
+  <div class="sq-sky" aria-hidden="true"></div>
+  <div class="sq-decor" aria-hidden="true">
+    <span class="sq-comet" style="left:6%;top:14%"></span>
+    <span class="sq-moon" style="right:8%;top:10%"></span>
+    <span class="sq-cloud cool" style="left:2%;bottom:31%;width:200px;height:50px"></span>
+    <span class="sq-cloud warm" style="left:19%;bottom:21%;width:132px;height:34px"></span>
+    <span class="sq-cloud cool" style="right:6%;bottom:29%;width:230px;height:60px"></span>
+    <span class="sq-cloud warm" style="right:33%;bottom:17%;width:124px;height:30px"></span>
+    <span class="sq-horizon"></span>
+    <span class="sq-gantry"></span>
+    <span class="sq-ground"></span>
+    <span class="sq-hills"></span>
+  </div>
+
+  <main class="sq-landing">
+    <div class="sq-session" id="landingSession" hidden></div>
+
+    <div class="sq-landing-stage">
+      <div class="sq-landing-copy">
+        <h1 class="sq-logo">问数<em>星途</em></h1>
+        <p class="sq-logo-en">STAR QUEST · MATH</p>
+        <p class="sq-tagline">给不会数学的孩子，请一个会问问题的老师</p>
+
+        <div class="sq-mascot-row">
+          <span class="sq-avatar">
+            <img src="/assets/images/mascot/xiaowen/idle.webp" data-qw-xiaowen="follow" alt="小问领航员">
+          </span>
+          <div class="sq-bubble">嗨！我是<b>小问</b>～<br>准备好一起探索数学星球了吗？</div>
+        </div>
+
+        <p class="sq-status">🚀 星途航行 · 等待点火 🚀</p>
+        <a class="sq-cta" id="cardStudent"
+           href="/pages/auth/login.html?redirect=%2Fpages%2Fstudent%2Fhome.html">🔥 点火出发 🔥</a>
+        <p class="sq-register">还没有账号？<a id="cardRegister" href="/pages/auth/register.html">免费注册，开启星途 →</a></p>
+      </div>
+
+      <img class="sq-rocket" src="/assets/images/mascot/rocket.svg" alt="星途火箭">
+    </div>
+
+    <p class="sq-landing-foot">问数星途 v1.0 · 对话式中小学数学陪学 · 桌面端体验最佳</p>
+  </main>
+
+  <script>
+    (function () {
+      var AUTH = window.QWAuth;
+      if (!AUTH || !AUTH.isLoggedIn()) return;
+      var user = AUTH.getUser();
+      if (!user) return;
+
+      var home = AUTH.homeFor(user.role);
+      document.getElementById('cardStudent').href = home;
+
+      var box = document.getElementById('landingSession');
+      box.hidden = false;
+
+      var label = document.createElement('span');
+      label.appendChild(document.createTextNode('🛰 已登录：'));
+      var nameNode = document.createElement('b');
+      nameNode.textContent = AUTH.displayName(user);
+      label.appendChild(nameNode);
+      box.appendChild(label);
+
+      var cont = document.createElement('button');
+      cont.type = 'button';
+      cont.textContent = '继续探索';
+      cont.addEventListener('click', function () { window.location.href = home; });
+      box.appendChild(cont);
+
+      var out = document.createElement('button');
+      out.type = 'button';
+      out.textContent = '退出登录';
+      out.addEventListener('click', function () { AUTH.logout(); });
+      box.appendChild(out);
+    })();
+  </script>
+</body>
+</html>

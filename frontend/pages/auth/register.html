@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问数星途 · 注册</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/src/styles/common.css">
+  <link rel="stylesheet" href="/src/styles/space.css">
+  <script src="/src/scripts/auth.js"></script>
+  <script src="/src/scripts/xiaowen.js"></script>
+  <script src="/src/scripts/space-art.js"></script>
+</head>
+<body class="qw-auth-body qw-deep">
+  <div class="sq-sky" aria-hidden="true"></div>
+  <div class="sq-decor" aria-hidden="true">
+    <span class="sq-comet" style="left:52%;top:10%"></span>
+    <span class="sq-moon" style="left:7%;top:8%"></span>
+    <span class="sq-cloud" style="left:4%;bottom:22%;width:170px;height:44px"></span>
+    <span class="sq-cloud" style="right:6%;bottom:26%;width:140px;height:38px"></span>
+  </div>
+
+  <main class="qw-auth-page">
+    <div class="qw-auth-card">
+      <aside class="qw-auth-aside" id="authAside" data-role="student">
+        <div class="qw-auth-brand">
+          <span class="qw-auth-logo">问</span>
+          <div>
+            <b>问数星途</b>
+            <span>STAR QUEST · MATH</span>
+          </div>
+        </div>
+
+        <span class="sq-auth-badge">🚀 新星启航 · 30 秒点火</span>
+        <h1 id="authAsideTitle">从「不会」到<em>「我知道下一步」</em></h1>
+        <p id="authAsideDesc">注册后立刻拥有一整片数学星系：讲题课堂、标准题、错题订正，还有一位永远不会直接给答案的 AI 老师。</p>
+
+        <ul class="qw-auth-points">
+          <li><span>🧭</span><div><b>注册即启航</b><p>新账号会自动点亮星系数据，注册完直接进入第一关。</p></div></li>
+          <li><span>📊</span><div><b>自带星图报告</b><p>掌握趋势、讲题时间轴、错因分析，报告页一键查看。</p></div></li>
+          <li><span>🛡️</span><div><b>不泄答案的小问</b><p>直接索要答案会被拦住，改用一步步启发式提问。</p></div></li>
+        </ul>
+
+        <div class="sq-pilot">
+          <img src="/assets/images/mascot/xiaowen/idle.webp" data-qw-xiaowen="follow" alt="小问领航员">
+          <div class="sq-pilot-text">
+            <b>小问 · 你的星途领航员</b>
+            填好下面这张「登船卡」，我们就出发去寻找属于你的第一颗数学星球。
+          </div>
+        </div>
+      </aside>
+
+      <section class="qw-auth-main">
+        <h2>创建问数星途账号</h2>
+        <p class="qw-auth-sub">30 秒完成，马上开始第一步讲题</p>
+
+        <div class="qw-auth-msg" id="authMsg"></div>
+
+        <form id="registerForm" autocomplete="on">
+          <div class="qw-field">
+            <label for="regName">姓名</label>
+            <div class="qw-auth-input">
+              <span>🧑</span>
+              <input type="text" id="regName" placeholder="请输入真实姓名" autocomplete="name">
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="regPhone">手机号</label>
+            <div class="qw-auth-input">
+              <span>📱</span>
+              <input type="tel" id="regPhone" placeholder="11 位手机号" autocomplete="tel">
+              <button type="button" class="qw-auth-code-btn" id="sendCodeBtn">获取验证码</button>
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="regCode">短信验证码（演示环境可留空）</label>
+            <div class="qw-auth-input">
+              <span>✉️</span>
+              <input type="text" id="regCode" placeholder="6 位数字" inputmode="numeric" maxlength="6">
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="regPassword">设置密码</label>
+            <div class="qw-auth-input">
+              <span>🔒</span>
+              <input type="password" id="regPassword" placeholder="至少 6 位" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="regConfirm">确认密码</label>
+            <div class="qw-auth-input">
+              <span>🔐</span>
+              <input type="password" id="regConfirm" placeholder="再输入一次" autocomplete="new-password">
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="regGrade">探索者年级</label>
+            <div class="qw-auth-input">
+              <span>🏫</span>
+              <select id="regGrade">
+                <option>六年级</option>
+                <option>七年级</option>
+                <option selected>八年级</option>
+                <option>九年级</option>
+                <option>初中衔接</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="qw-auth-submit" id="registerSubmit">🚀 开始探索</button>
+        </form>
+
+        <p class="qw-auth-alt">已有账号？<a href="/pages/auth/login.html">直接登录</a></p>
+      </section>
+    </div>
+  </main>
+  <script src="/src/scripts/auth-page.js"></script>
+</body>
+</html>

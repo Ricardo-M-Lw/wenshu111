@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://unpkg.com" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      scrollbar-width: none;
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F0F7F7] min-h-screen font-body text-gray-800">
+
+<link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=ZCOOL+QingKe+HuangYou&display=swap" />
+
+<style type="text/tailwindcss">
+  @theme {
+    --color-primary: #2BA4A0;
+    --color-primary-dark: #1E8C88;
+    --color-primary-light: #E0F5F4;
+    --color-accent: #F5A623;
+    --color-accent-light: #FFF3DC;
+    --color-surface: #FFFFFF;
+    --color-dark: #1A2A3A;
+    --color-muted: #8A9BAE;
+    --color-success: #34C759;
+    --color-warning: #FF9500;
+    --color-danger: #FF3B30;
+    --font-display: 'ZCOOL QingKe HuangYou', cursive;
+    --font-body: 'Noto Sans SC', sans-serif;
+  }
+
+  .day-cell {
+    transition: all 0.2s ease;
+  }
+  .day-cell.checked {
+    background: linear-gradient(135deg, #2BA4A0, #3DC4C0);
+    color: white;
+    border-radius: 12px;
+  }
+  .day-cell.today {
+    border: 2px solid #F5A623;
+    border-radius: 12px;
+  }
+  .checkin-btn {
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #F5A623, #FFB84D);
+  }
+  .checkin-btn:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 24px rgba(245, 166, 35, 0.3);
+  }
+  @keyframes coinFloat {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+  }
+</style>
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 bg-surface/90 backdrop-blur-md z-50 border-b border-primary/10">
+  <div class="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="#" class="flex items-center gap-2 text-muted hover:text-primary transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span class="text-sm">返回首页</span>
+      </a>
+      <div class="w-px h-5 bg-gray-200 mx-2"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+          <span class="text-white font-display text-sm">问</span>
+        </div>
+        <span class="font-display text-lg text-dark">签到积分</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 bg-accent-light rounded-full px-3 py-1">
+        <i data-lucide="coins" class="w-4 h-4 text-accent"></i>
+        <span class="text-sm font-semibold text-accent">128 积分</span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-16 max-w-4xl mx-auto px-6">
+
+  <!-- Streak & Points Header -->
+  <div class="bg-gradient-to-r from-accent to-[#FFB84D] rounded-2xl p-8 text-white relative overflow-hidden mb-8">
+    <div class="absolute top-0 right-0 opacity-10">
+      <svg width="200" height="200"><circle cx="150" cy="50" r="100" fill="white"/></svg>
+    </div>
+    <div class="relative z-10 flex items-center justify-between">
+      <div>
+        <p class="text-white/70 text-sm mb-1">每日签到 · 坚持学习</p>
+        <h1 class="font-display text-3xl mb-2">已连续签到 <span class="text-4xl">7</span> 天 🔥</h1>
+        <p class="text-white/80 text-sm">再签到 3 天即可获得「七日之约」徽章</p>
+      </div>
+      <div class="text-center">
+        <div class="w-24 h-24 rounded-2xl bg-white/15 backdrop-blur-sm flex flex-col items-center justify-center">
+          <i data-lucide="coins" class="w-8 h-8 text-white mb-1"></i>
+          <p class="text-2xl font-bold">128</p>
+          <p class="text-[10px] text-white/70">总积分</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <!-- Calendar Section -->
+    <div class="md:col-span-2">
+      <div class="bg-surface rounded-2xl border border-primary/5 p-6">
+        <!-- Month header -->
+        <div class="flex items-center justify-between mb-6">
+          <button class="text-muted hover:text-primary transition-colors">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <h3 class="font-semibold text-dark text-lg">2025年1月</h3>
+          <button class="text-muted hover:text-primary transition-colors">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- Week headers -->
+        <div class="grid grid-cols-7 gap-2 mb-2">
+          <div class="text-center text-xs text-muted font-medium py-1">日</div>
+          <div class="text-center text-xs text-muted font-medium py-1">一</div>
+          <div class="text-center text-xs text-muted font-medium py-1">二</div>
+          <div class="text-center text-xs text-muted font-medium py-1">三</div>
+          <div class="text-center text-xs text-muted font-medium py-1">四</div>
+          <div class="text-center text-xs text-muted font-medium py-1">五</div>
+          <div class="text-center text-xs text-muted font-medium py-1">六</div>
+        </div>
+
+        <!-- Calendar grid -->
+        <div class="grid grid-cols-7 gap-2">
+          <!-- Row 1: Dec overflow -->
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-gray-300">29</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-gray-300">30</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-gray-300">31</div>
+          <!-- Jan 1 -->
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">1</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">2</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">3</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">4</div>
+          <!-- Row 2 -->
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">5</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">6</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">7</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">8</div>
+          <div class="day-cell checked text-center py-3 text-sm font-medium">9<div class="text-[10px] opacity-70">+2</div></div>
+          <div class="day-cell checked text-center py-3 text-sm font-medium">10<div class="text-[10px] opacity-70">+2</div></div>
+          <div class="day-cell checked text-center py-3 text-sm font-medium">11<div class="text-[10px] opacity-70">+2</div></div>
+          <!-- Row 3 -->
+          <div class="day-cell checked text-center py-3 text-sm font-medium">12<div class="text-[10px] opacity-70">+2</div></div>
+          <div class="day-cell checked text-center py-3 text-sm font-medium">13<div class="text-[10px] opacity-70">+2</div></div>
+          <div class="day-cell checked text-center py-3 text-sm font-medium">14<div class="text-[10px] opacity-70">+2</div></div>
+          <div class="day-cell today text-center py-3 text-sm font-semibold text-accent bg-accent-light">15<div class="text-[10px]">今天</div></div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">16</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">17</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">18</div>
+          <!-- Row 4 -->
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">19</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">20</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">21</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">22</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">23</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">24</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">25</div>
+          <!-- Row 5 -->
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">26</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">27</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">28</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">29</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">30</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-muted">31</div>
+          <div class="day-cell text-center py-3 rounded-lg text-sm text-gray-300">1</div>
+        </div>
+
+        <!-- Today Check-in Button -->
+        <div class="mt-6 text-center">
+          <button class="checkin-btn text-white font-semibold px-12 py-3.5 rounded-2xl text-base shadow-lg">
+            <i data-lucide="check-circle" class="w-5 h-5 inline mr-2"></i>
+            今日签到 +2积分
+          </button>
+          <p class="text-muted text-xs mt-2">每日签到可获得 2 积分，连续签到还有额外奖励</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="space-y-6">
+      <!-- Streak Reward -->
+      <div class="bg-surface rounded-2xl border border-primary/5 p-5">
+        <h4 class="font-semibold text-dark text-sm mb-4 flex items-center gap-2">
+          <i data-lucide="gift" class="w-4 h-4 text-accent"></i>
+          连续签到奖励
+        </h4>
+        <div class="space-y-3">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+              <i data-lucide="check" class="w-4 h-4 text-success"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-dark">连续3天</p>
+              <p class="text-[10px] text-muted">+5 积分</p>
+            </div>
+            <span class="text-[10px] text-success font-medium">已领</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+              <i data-lucide="check" class="w-4 h-4 text-success"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-dark">连续5天</p>
+              <p class="text-[10px] text-muted">+10 积分</p>
+            </div>
+            <span class="text-[10px] text-success font-medium">已领</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-accent-light flex items-center justify-center">
+              <i data-lucide="gift" class="w-4 h-4 text-accent"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-dark">连续7天</p>
+              <p class="text-[10px] text-muted">+20 积分 + 徽章</p>
+            </div>
+            <span class="text-[10px] text-accent font-medium">今天可领</span>
+          </div>
+          <div class="flex items-center gap-3 opacity-50">
+            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+              <i data-lucide="lock" class="w-4 h-4 text-muted"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-dark">连续14天</p>
+              <p class="text-[10px] text-muted">+50 积分 + 徽章</p>
+            </div>
+            <span class="text-[10px] text-muted">未解锁</span>
+          </div>
+          <div class="flex items-center gap-3 opacity-50">
+            <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center">
+              <i data-lucide="lock" class="w-4 h-4 text-muted"></i>
+            </div>
+            <div class="flex-1">
+              <p class="text-xs font-medium text-dark">连续30天</p>
+              <p class="text-[10px] text-muted">+100 积分 + 专属徽章</p>
+            </div>
+            <span class="text-[10px] text-muted">未解锁</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Points History -->
+      <div class="bg-surface rounded-2xl border border-primary/5 p-5">
+        <h4 class="font-semibold text-dark text-sm mb-4 flex items-center gap-2">
+          <i data-lucide="list" class="w-4 h-4 text-primary"></i>
+          积分明细
+        </h4>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-dark">每日签到</p>
+              <p class="text-[10px] text-muted">1月14日</p>
+            </div>
+            <span class="text-xs font-semibold text-success">+2</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-dark">连续签到5天奖励</p>
+              <p class="text-[10px] text-muted">1月13日</p>
+            </div>
+            <span class="text-xs font-semibold text-success">+10</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-dark">答对5题奖励</p>
+              <p class="text-[10px] text-muted">1月13日</p>
+            </div>
+            <span class="text-xs font-semibold text-success">+5</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-dark">每日签到</p>
+              <p class="text-[10px] text-muted">1月13日</p>
+            </div>
+            <span class="text-xs font-semibold text-success">+2</span>
+          </div>
+        </div>
+        <button class="w-full mt-4 text-center text-xs text-primary hover:text-primary-dark font-medium transition-colors">
+          查看全部 →
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+<script>if (window.lucide) lucide.createIcons();</script>
+</html>

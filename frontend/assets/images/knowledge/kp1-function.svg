@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" width="400" height="160" role="img" aria-label="一次函数 y = kx + b 示意图">
+  <defs>
+    <linearGradient id="kp1bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#667EEA"/><stop offset="100%" stop-color="#764BA2"/>
+    </linearGradient>
+    <linearGradient id="kp1line" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FFE28A"/><stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="160" rx="18" fill="url(#kp1bg)"/>
+  <g stroke="rgba(255,255,255,0.16)" stroke-width="1">
+    <path d="M0 40H400M0 80H400M0 120H400M80 0V160M160 0V160M240 0V160M320 0V160"/>
+  </g>
+  <g stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none">
+    <path d="M40 130H370"/>
+    <path d="M40 130V26"/>
+  </g>
+  <path d="M60 122L340 34" stroke="url(#kp1line)" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <circle cx="60" cy="122" r="6" fill="#FFFFFF"/>
+  <circle cx="60" cy="122" r="11" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+  <text x="66" y="146" font-family="'Noto Sans SC',sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">b</text>
+  <text x="332" y="60" font-family="'Noto Sans SC',sans-serif" font-size="17" font-weight="700" fill="#FFFFFF">y = kx + b</text>
+  <text x="286" y="86" font-family="'Noto Sans SC',sans-serif" font-size="13" fill="rgba(255,255,255,0.85)">k &gt; 0 上升</text>
+</svg>

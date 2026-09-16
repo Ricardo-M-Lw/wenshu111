@@ -1,0 +1,39 @@
+# ===========================================================================
+# 问数星途 · Docker Compose
+# 用途：① 部署路线二（云服务器上跑容器，最省环境问题）
+#       ② 本机复刻生产环境（NODE_ENV=production + JWT_SECRET 护栏一起验）
+# ---------------------------------------------------------------------------
+# 用法：
+#   cp backend/.env.example backend/.env   # 然后填 JWT_SECRET（>=32 位）
+#   docker compose up -d --build
+#   http://<服务器IP>:3000/pages/auth/login.html
+#
+# 正式对外建议前面再挂 Nginx 管 HTTPS（见 部署文档.md 方案 C），
+# 别忘 proxy_buffering off —— 智能体是流式返回。
+# ===========================================================================
+services:
+  wenshu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wenshu-fullstack:latest
+    container_name: wenshu
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - backend/.env            # 必须放在仓库里；不存在时 compose 会直接报错提醒你
+    environment:
+      NODE_ENV: production      # 覆盖 .env 里的值，确保容器内就是生产模式
+      PORT: "3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"         # 防止日志把磁盘写满
+        max-file: "3"

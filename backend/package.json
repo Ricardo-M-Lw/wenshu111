@@ -1,0 +1,21 @@
+{
+  "name": "wenshu-backend",
+  "version": "1.0.0",
+  "description": "问数平台后端 API",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "seed": "node src/utils/seed.js",
+    "db:schema": "node src/db/dump-sql.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

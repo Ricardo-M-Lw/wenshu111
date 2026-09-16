@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://unpkg.com" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/js/all.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      scrollbar-width: none;
+      scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+    }
+  </style>
+</head>
+
+<body class="bg-[#F0F7F7] min-h-screen font-body text-gray-800">
+
+<link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&family=ZCOOL+QingKe+HuangYou&display=swap" />
+
+<style type="text/tailwindcss">
+  @theme {
+    --color-primary: #2BA4A0;
+    --color-primary-dark: #1E8C88;
+    --color-primary-light: #E0F5F4;
+    --color-accent: #F5A623;
+    --color-accent-light: #FFF3DC;
+    --color-surface: #FFFFFF;
+    --color-dark: #1A2A3A;
+    --color-muted: #8A9BAE;
+    --color-success: #34C759;
+    --color-warning: #FF9500;
+    --color-danger: #FF3B30;
+    --font-display: 'ZCOOL QingKe HuangYou', cursive;
+    --font-body: 'Noto Sans SC', sans-serif;
+  }
+
+  .error-tag {
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  .error-tag:hover {
+    border-color: #F5A623;
+    background: #FFF3DC;
+  }
+  .error-tag.selected {
+    border-color: #F5A623;
+    background: #F5A623;
+    color: white;
+  }
+  .step-card {
+    transition: all 0.2s ease;
+  }
+  .step-card:hover {
+    box-shadow: 0 4px 16px rgba(43, 164, 160, 0.1);
+  }
+</style>
+
+<!-- Top Navigation -->
+<nav class="fixed top-0 left-0 right-0 bg-surface/90 backdrop-blur-md z-50 border-b border-primary/10">
+  <div class="max-w-4xl mx-auto px-6 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <a href="#" class="flex items-center gap-2 text-muted hover:text-primary transition-colors">
+        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+        <span class="text-sm">返回</span>
+      </a>
+      <div class="w-px h-5 bg-gray-200 mx-2"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-danger/10 flex items-center justify-center">
+          <i data-lucide="search" class="w-4 h-4 text-danger"></i>
+        </div>
+        <span class="font-display text-lg text-dark">错因分析与纠正</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2 text-sm text-muted">
+      <span>勾股定理 · 第3题</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="pt-20 pb-16 max-w-4xl mx-auto px-6">
+
+  <!-- Error Summary Header -->
+  <div class="bg-danger/5 border border-danger/15 rounded-2xl p-6 mb-8">
+    <div class="flex items-start gap-4">
+      <div class="w-12 h-12 rounded-xl bg-danger/10 flex items-center justify-center flex-shrink-0">
+        <i data-lucide="alert-circle" class="w-6 h-6 text-danger"></i>
+      </div>
+      <div class="flex-1">
+        <h2 class="font-semibold text-dark text-lg">这道题答错了，没关系！</h2>
+        <p class="text-muted text-sm mt-1">让我们一起分析错在哪里，然后重新理解。这才是真正学会的过程。</p>
+        <div class="mt-3 bg-white rounded-xl p-4">
+          <p class="text-sm text-dark"><strong>原题：</strong>在直角三角形 ABC 中，∠C=90°，AC=3cm，BC=4cm，求 AB。</p>
+          <div class="flex items-center gap-4 mt-2">
+            <span class="text-sm"><span class="text-danger font-medium">你的答案：</span>7cm</span>
+            <span class="text-sm"><span class="text-success font-medium">正确答案：</span>5cm</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 1: Error Category Selection -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-8 h-8 rounded-full bg-accent flex items-center justify-center">
+        <span class="text-white font-bold text-sm">1</span>
+      </div>
+      <h3 class="font-semibold text-dark text-lg">你觉得自己错在哪儿？</h3>
+    </div>
+    <p class="text-muted text-sm mb-4 ml-11">选择一个最接近的错因类型（可以多选）</p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 ml-11">
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-[#FFE5E5] flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="brain" class="w-4 h-4 text-danger"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">概念不清</span>
+        <p class="text-xs text-muted mt-0.5">不理解定理含义</p>
+      </div>
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-[#FFF0D4] flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="eye" class="w-4 h-4 text-warning"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">条件识别</span>
+        <p class="text-xs text-muted mt-0.5">没看清题目条件</p>
+      </div>
+      <div class="error-tag selected border-2 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-white/30 flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="function-square" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="text-sm font-medium">公式错误</span>
+        <p class="text-xs text-white/80 mt-0.5">公式记混或用错</p>
+      </div>
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-[#E8F8F7] flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="plus-minus" class="w-4 h-4 text-primary"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">符号/运算</span>
+        <p class="text-xs text-muted mt-0.5">计算过程出错</p>
+      </div>
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-[#F0E8FF] flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="calculator" class="w-4 h-4 text-[#8B5CF6]"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">计算错误</span>
+        <p class="text-xs text-muted mt-0.5">算数过程出错</p>
+      </div>
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-[#E8EEF8] flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="shuffle" class="w-4 h-4 text-[#6C8EBF]"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">不会迁移</span>
+        <p class="text-xs text-muted mt-0.5">换个场景不会用</p>
+      </div>
+      <div class="error-tag border-2 border-gray-200 rounded-xl px-4 py-3 text-center">
+        <div class="w-8 h-8 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2">
+          <i data-lucide="help-circle" class="w-4 h-4 text-muted"></i>
+        </div>
+        <span class="text-sm font-medium text-dark">无法识别</span>
+        <p class="text-xs text-muted mt-0.5">完全不知道错哪</p>
+      </div>
+    </div>
+
+    <!-- Brief Comment -->
+    <div class="ml-11 mt-4">
+      <textarea class="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm resize-none focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none" rows="2" placeholder="简单说说你当时是怎么想的？（选填）">我直接把 3 和 4 加起来了，没有用平方</textarea>
+    </div>
+  </div>
+
+  <!-- Step 2: Guided Re-observation -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+        <span class="text-white font-bold text-sm">2</span>
+      </div>
+      <h3 class="font-semibold text-dark text-lg">回到出错步骤，重新观察</h3>
+    </div>
+
+    <div class="ml-11 space-y-4">
+      <!-- AI Guide Bubble -->
+      <div class="bg-primary-light/50 border border-primary/10 rounded-2xl px-5 py-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+            <span class="text-white text-xs font-display">问</span>
+          </div>
+          <span class="text-sm font-semibold text-primary">问数老师</span>
+        </div>
+        <p class="text-sm text-dark leading-relaxed">你选择了「公式错误」，说明你可能把勾股定理记成了 a + b = c。让我们重新看看这个公式 👇</p>
+      </div>
+
+      <!-- Re-observation Card -->
+      <div class="step-card bg-surface border border-primary/10 rounded-2xl p-6">
+        <div class="bg-dark rounded-xl p-5 text-center mb-4">
+          <p class="text-[#E8E8E0] font-display text-xl tracking-wide">勾股定理：a² + b² = c²</p>
+          <p class="text-[#E8E8E0]/50 text-sm mt-2">其中 c 是直角三角形的<span class="text-accent font-medium">斜边</span>（最长边）</p>
+        </div>
+        <div class="bg-accent-light/50 rounded-xl px-4 py-3">
+          <p class="text-sm text-dark"><i data-lucide="lightbulb" class="w-4 h-4 text-accent inline mr-1"></i> <strong>关键区别：</strong>是先分别<span class="text-primary font-semibold">平方</span>再相加，不是直接把边长加在一起哦。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Re-answer -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-8 h-8 rounded-full bg-success flex items-center justify-center">
+        <span class="text-white font-bold text-sm">3</span>
+      </div>
+      <h3 class="font-semibold text-dark text-lg">自己得出答案</h3>
+    </div>
+
+    <div class="ml-11 space-y-4">
+      <div class="bg-primary-light/50 border border-primary/10 rounded-2xl px-5 py-4">
+        <div class="flex items-center gap-2 mb-2">
+          <div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+            <span class="text-white text-xs font-display">问</span>
+          </div>
+          <span class="text-sm font-semibold text-primary">问数老师</span>
+        </div>
+        <p class="text-sm text-dark leading-relaxed">好，现在请你重新算一下：3² + 4² = ？然后对结果开平方。AB 等于多少？</p>
+      </div>
+
+      <!-- Re-answer Input -->
+      <div class="bg-surface border border-primary/10 rounded-2xl p-6">
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-dark font-medium w-24">第一步：</span>
+            <span class="text-sm text-muted">3² =</span>
+            <input type="text" class="w-16 h-9 border-2 border-gray-200 rounded-lg px-3 text-center text-sm font-semibold focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none" value="9" />
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-dark font-medium w-24">第二步：</span>
+            <span class="text-sm text-muted">4² =</span>
+            <input type="text" class="w-16 h-9 border-2 border-gray-200 rounded-lg px-3 text-center text-sm font-semibold focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none" value="16" />
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-dark font-medium w-24">第三步：</span>
+            <span class="text-sm text-muted">9 + 16 =</span>
+            <input type="text" class="w-16 h-9 border-2 border-gray-200 rounded-lg px-3 text-center text-sm font-semibold focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none" value="25" />
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-dark font-medium w-24">最终答案：</span>
+            <span class="text-sm text-muted">AB = √25 =</span>
+            <input type="text" class="w-16 h-9 border-2 border-primary rounded-lg px-3 text-center text-sm font-bold text-primary focus:ring-2 focus:ring-primary/10 outline-none" value="5" />
+            <span class="text-sm text-dark">cm</span>
+            <span class="inline-flex items-center gap-1 text-success text-sm font-medium ml-2">
+              <i data-lucide="check-circle" class="w-4 h-4"></i> 正确！
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Success Message -->
+      <div class="bg-success/5 border border-success/15 rounded-2xl px-5 py-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center">
+            <i data-lucide="sparkles" class="w-5 h-5 text-success"></i>
+          </div>
+          <div>
+            <p class="text-sm font-semibold text-success">太棒了，你自己推导出了正确答案！🎊</p>
+            <p class="text-xs text-success/70 mt-0.5">记住：勾股定理是平方和，不是直接相加。下次遇到类似题，先平方再加。</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 mt-4 ml-13">
+          <button class="bg-success hover:bg-success/90 text-white text-sm font-medium px-5 py-2 rounded-xl transition-colors">
+            继续下一题
+          </button>
+          <button class="text-primary hover:text-primary-dark text-sm font-medium transition-colors">
+            查看学习结果 →
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+</body>
+<script>if (window.lucide) lucide.createIcons();</script>
+</html>

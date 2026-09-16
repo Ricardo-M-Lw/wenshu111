@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 300" width="220" height="300" role="img" aria-label="探索号火箭">
+  <defs>
+    <linearGradient id="rkBody" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset=".55" stop-color="#F3F5FB"/>
+      <stop offset="1" stop-color="#D9DEEB"/>
+    </linearGradient>
+    <linearGradient id="rkNose" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FF7A59"/>
+      <stop offset="1" stop-color="#E23F3F"/>
+    </linearGradient>
+    <linearGradient id="rkWin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8FD8FF"/>
+      <stop offset="1" stop-color="#2E6BE6"/>
+    </linearGradient>
+  </defs>
+  <path d="M110 8 C150 58 168 110 168 168 L52 168 C52 110 70 58 110 8 Z" fill="url(#rkBody)"/>
+  <path d="M110 8 C132 36 146 66 155 100 L65 100 C74 66 88 36 110 8 Z" fill="url(#rkNose)"/>
+  <rect x="46" y="168" width="128" height="58" rx="16" fill="url(#rkBody)"/>
+  <path d="M46 196 L14 250 L52 244 Z" fill="url(#rkNose)"/>
+  <path d="M174 196 L206 250 L168 244 Z" fill="url(#rkNose)"/>
+  <circle cx="110" cy="120" r="34" fill="url(#rkWin)"/>
+  <circle cx="110" cy="120" r="34" fill="none" stroke="#C7D2E8" stroke-width="6"/>
+  <circle cx="99" cy="110" r="9" fill="#ffffff" opacity=".55"/>
+  <rect x="66" y="234" width="88" height="26" rx="10" fill="#B9C2D6"/>
+  <path d="M84 262 q26 30 52 0 z" fill="#FFC53D"/>
+  <path d="M96 262 q14 20 28 0 z" fill="#FF7A59"/>
+</svg>

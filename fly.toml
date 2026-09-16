@@ -1,0 +1,36 @@
+# ===========================================================================
+# 问数星途 · Fly.io 配置（部署路线一备选，同样吃仓库根目录的 Dockerfile）
+# ---------------------------------------------------------------------------
+# 用法：
+#   fly launch --no-deploy --copy-config --name <全局唯一的名字>
+#   fly secrets set JWT_SECRET=<32位以上随机串> LLM_API_KEY=<你的key>   # 密钥走 secrets，不落在文件里
+#   fly deploy
+# ===========================================================================
+app = "wenshu-xingtu"
+primary_region = "sin"            # 新加坡；备选 hkg（香港）/ nrt（东京）
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  AGENT_PROVIDER = "rules"        # 要用大模型就删掉这行，再 fly secrets set LLM_API_KEY
+
+[http_service]
+  internal_port = 3000
+  force_https = true              # 强制 HTTPS —— 语音唤醒 / 语音播报都要安全上下文
+  auto_stop_machines = "stop"     # 空闲自动停机，省免费额度（代价：下次访问冷启动）
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[http_service.checks]]
+  interval = "30s"
+  timeout = "5s"
+  grace_period = "10s"
+  method = "GET"
+  path = "/api/health"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

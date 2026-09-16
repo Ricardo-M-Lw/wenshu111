@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>问数星途 · 登录</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <link rel="stylesheet" href="/src/styles/common.css">
+  <link rel="stylesheet" href="/src/styles/space.css">
+  <script src="/src/scripts/auth.js"></script>
+  <script src="/src/scripts/xiaowen.js"></script>
+  <script src="/src/scripts/space-art.js"></script>
+</head>
+<body class="qw-auth-body qw-deep">
+  <div class="sq-sky" aria-hidden="true"></div>
+  <div class="sq-decor" aria-hidden="true">
+    <span class="sq-comet" style="left:48%;top:8%"></span>
+    <span class="sq-moon" style="right:6%;top:7%"></span>
+    <span class="sq-cloud" style="left:2%;bottom:24%;width:180px;height:46px"></span>
+    <span class="sq-cloud" style="right:8%;bottom:18%;width:150px;height:40px"></span>
+  </div>
+
+  <main class="qw-auth-page">
+    <div class="qw-auth-card">
+      <aside class="qw-auth-aside" id="authAside" data-role="student">
+        <div class="qw-auth-brand">
+          <span class="qw-auth-logo">问</span>
+          <div>
+            <b>问数星途</b>
+            <span>STAR QUEST · MATH</span>
+          </div>
+        </div>
+
+        <span class="sq-auth-badge">🪐 小问星际漫游 · 数学宇宙</span>
+        <h1 id="authAsideTitle">让好奇心<em>点亮星空</em></h1>
+        <p id="authAsideDesc">苏格拉底式启发提问与沉浸星际航旅。给孩子一把丈量银河的思维量尺。</p>
+
+        <ul class="qw-auth-points">
+          <li><span>🎬</span><div><b>五步讲题星轨</b><p>每一步都配上黑板图形与互动检查点，跟着走就不会迷航。</p></div></li>
+          <li><span>🤖</span><div><b>问数智能体小问</b><p>分级提示、对话判题、变式练习，陪你一步步把答案推出来。</p></div></li>
+          <li><span>📊</span><div><b>星图学习报告</b><p>掌握概览、讲题时间轴与错因分析，成长轨迹一眼看见。</p></div></li>
+        </ul>
+
+        <div class="sq-pilot">
+          <img src="/assets/images/mascot/xiaowen/idle.webp" data-qw-xiaowen="follow" alt="小问领航员">
+          <div class="sq-pilot-text">
+            <b>小问 · 你的星途领航员</b>
+            我不会直接告诉你答案，但会一个问题一个问题地陪你问下去，直到你自己点亮那颗星。
+          </div>
+        </div>
+      </aside>
+
+      <section class="qw-auth-main">
+        <h2>欢迎回来</h2>
+        <p class="qw-auth-sub">登录后继续你的数学星途</p>
+
+        <div class="qw-auth-msg" id="authMsg"></div>
+
+        <form id="loginForm" autocomplete="on">
+          <div class="qw-field">
+            <label for="loginAccount">手机号 / 用户名</label>
+            <div class="qw-auth-input">
+              <span>📱</span>
+              <input type="text" id="loginAccount" placeholder="例如 13800000001" autocomplete="username">
+            </div>
+          </div>
+          <div class="qw-field">
+            <label for="loginPassword">密码</label>
+            <div class="qw-auth-input">
+              <span>🔒</span>
+              <input type="password" id="loginPassword" placeholder="请输入密码" autocomplete="current-password">
+            </div>
+          </div>
+          <div class="qw-auth-row">
+            <label><input type="checkbox" id="loginRemember"> 记住我</label>
+            <a href="/pages/auth/register.html" id="authSwitchLink">还没有账号？去注册</a>
+          </div>
+          <button type="submit" class="qw-auth-submit" id="loginSubmit">🚀 开始探索</button>
+        </form>
+
+        <div class="qw-auth-demo" id="authDemo"></div>
+      </section>
+    </div>
+  </main>
+  <script src="/src/scripts/auth-page.js"></script>
+</body>
+</html>
