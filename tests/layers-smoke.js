@@ -50,7 +50,14 @@ async function call(method, url, body, token) {
     return item.columns.some(function (col) { return col.pk; });
   });
   const indexCount = schema.TABLES.reduce(function (sum, item) { return sum + item.indexes.length; }, 0);
-  check('表结构定义 14 张表且每张都有主键', names.length === 14 && everyTableHasPk, names.join(','));
+  // 表数量会随功能增加，这里不做「等于某个魔法数字」的断言：
+  // 改为「不少于 14 张 + 每张都有主键 + 表名不重复」，加表就不会再把用例写死。
+  const uniqueNames = names.filter(function (name, index) { return names.indexOf(name) === index; });
+  check('表结构每张表都有主键且表名不重复（当前 ' + names.length + ' 张）',
+    names.length >= 14 && everyTableHasPk && uniqueNames.length === names.length, names.join(','));
+  check('天梯四张表已登记（赛季 / 档案 / 对局 / 作答）',
+    ['qw_ladder_season', 'qw_ladder_profile', 'qw_ladder_match', 'qw_ladder_answer']
+      .every(function (name) { return names.indexOf(name) !== -1; }), 'tables=' + names.length);
   check('表结构声明了索引（主键 / SQL / 索引三件套）', indexCount >= 15, 'indexes=' + indexCount);
 
   const ddl = schema.toSql();
@@ -83,7 +90,7 @@ async function call(method, url, body, token) {
   const byPhone = repos.user.findByPhone('13800000001');
   check('仓储层走唯一索引按手机号查用户', !!byPhone && byPhone.id === 'u1', byPhone && byPhone.name);
   check('仓储层按角色索引查询',
-    repos.user.findByRole('teacher').length === 1 && repos.user.findByRole('ops').length === 1);
+    repos.user.findByRole('student').length === 1 && repos.user.findByRole('ops').length === 1);
 
   const info = repos.info();
   check('仓储层元信息：已落地表 + 待拆表',
@@ -109,9 +116,9 @@ async function call(method, url, body, token) {
 
   // ---------------- 权限层 ----------------
   check('权限层：角色 -> 权限码',
-    permissions.can({ role: 'teacher' }, 'admin:overview:read') &&
-    !permissions.can({ role: 'teacher' }, 'admin:order:list') &&
-    permissions.can({ role: 'ops' }, 'admin:order:list'));
+    permissions.can({ role: 'ops' }, 'admin:overview:read') &&
+    permissions.can({ role: 'ops' }, 'admin:order:list') &&
+    !permissions.can({ role: 'student' }, 'admin:overview:read'));
   check('权限层：学生没有任何管理端权限', permissions.permissionsOf({ role: 'student' }).length === 0);
 
   // ---------------- 服务层 ----------------
@@ -156,34 +163,34 @@ async function call(method, url, body, token) {
     meBefore.status === 200 && meAfter.status === 401, 'before=' + meBefore.status + ' after=' + meAfter.status);
 
   // ---------------- 管理端 ----------------
-  const teacher = await call('POST', '/api/auth/login', { account: 'teacher', password: '123456' });
   const ops = await call('POST', '/api/auth/login', { account: 'admin', password: 'admin123' });
-  check('教师 / 运营演示账号可登录',
-    teacher.status === 200 && teacher.data.user.role === 'teacher' &&
-    ops.status === 200 && ops.data.user.role === 'ops');
+  check('运营演示账号可登录', ops.status === 200 && ops.data.user.role === 'ops');
 
-  const teaToken = teacher.data.token;
+  const retired = await call('POST', '/api/auth/login', { account: 'teacher', password: '123456' });
+  check('已下线的教师账号无法登录（产品收敛为学生 + 家长）', retired.status === 401);
+
   const opsToken = ops.data.token;
 
-  const overview = await call('GET', '/api/admin/overview', null, teaToken);
-  check('管理端看板（教师）',
-    overview.status === 200 && overview.data.data.users.teacher === 1 &&
+  const overview = await call('GET', '/api/admin/overview', null, opsToken);
+  check('管理端看板（运营）',
+    overview.status === 200 && overview.data.data.users.ops === 1 &&
     overview.data.data.platform.cacheDriver === cache.driver,
     JSON.stringify(overview.data.data.learning));
 
-  const questions = await call('GET', '/api/admin/questions', null, teaToken);
+  const questions = await call('GET', '/api/admin/questions', null, opsToken);
   check('管理端题库不泄答案',
     questions.status === 200 && questions.data.data.items.length > 0 &&
     questions.data.data.items.every(function (item) { return item.correctAnswer === undefined; }));
 
-  const errors = await call('GET', '/api/admin/error-types', null, teaToken);
+  const errors = await call('GET', '/api/admin/error-types', null, opsToken);
   check('管理端错因字典带真实出现次数',
     errors.status === 200 && errors.data.data.total === 7 && errors.data.data.totalHits > 0,
     'hits=' + errors.data.data.totalHits);
 
-  const teaOrders = await call('GET', '/api/admin/orders', null, teaToken);
-  check('角色权限：教师看订单被 403 拦下',
-    teaOrders.status === 403 && teaOrders.data.permission === 'admin:order:list');
+  const stuFresh = await call('POST', '/api/auth/login', { account: '13800000001', password: '123456' });
+  const stuOrders = await call('GET', '/api/admin/orders', null, stuFresh.data.token);
+  check('越权防护：学生访问管理端订单接口被 403 拦下',
+    stuOrders.status === 403 && stuOrders.data.permission === 'admin:order:list');
 
   const opsOrders = await call('GET', '/api/admin/orders', null, opsToken);
   check('角色权限：运营可看订单与收入',

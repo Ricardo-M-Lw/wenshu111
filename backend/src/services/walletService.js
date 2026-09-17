@@ -33,6 +33,7 @@ const CATEGORY_LABEL = {
   checkin: '每日签到',
   quiz: '答对标准题',
   lesson: '完成讲题课堂',
+  ladder: '星际天梯',
   badge: '解锁徽章',
   redeem: '兑换小问对话',
   recharge: '星钻充值',

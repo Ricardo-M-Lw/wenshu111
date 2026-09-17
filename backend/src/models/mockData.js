@@ -51,21 +51,8 @@ const users = [
     className: '八年级（3）班',
     createdAt: stamp(126, 9, 0)
   },
-  // 管理端演示账号：教师只能看学情与题库，运营还能看会员订单与收入
-  {
-    id: 't1',
-    name: '王老师',
-    nickname: '王老师',
-    username: 'teacher',
-    phone: '13900000001',
-    password: '123456',
-    role: 'teacher',
-    avatar: '🧑‍🏫',
-    subject: '数学',
-    school: '实验中学',
-    className: '八年级（3）班',
-    createdAt: stamp(200, 8, 0)
-  },
+  // 产品已收敛为「学生 + 家长」：原教师账号与班级课堂模式一并下线，
+  // 管理端只保留运营账号（会员订单、收入对账、题库巡检）。
   {
     id: 'o1',
     name: '李运营',
@@ -251,6 +238,7 @@ const LEVELS = [
 const EXP_RULES = [
   { icon: '🎬', action: '完成一次讲题课堂', exp: 20, reward: '星尘 +20', note: '五步走完一个知识点并结课' },
   { icon: '📝', action: '答对一道标准题', exp: 10, reward: '星尘 +10', note: '答题星球与标准题训练共用这条规则' },
+  { icon: '🛰', action: '完成一局星际天梯', exp: 0, reward: '星尘 +3 ~ +12', note: '胜场拿最多；免费版每天 3 局，领航员每天 10 局' },
   { icon: '📅', action: '每日签到', exp: 0, reward: '星尘 +2', note: '连续签到满 7 天当天额外 +10 星尘（不计经验）' },
   { icon: '🛠️', action: '订正一道错题', exp: 0, reward: '订正率 +1', note: '错因归档 + 回课堂重讲，不计经验但会进错因雷达' },
   { icon: '🏅', action: '解锁一枚徽章', exp: 0, reward: '成就展示', note: '徽章与掌握度只做成就展示，不再折算星钻' }
@@ -380,8 +368,55 @@ const crystalOrders = [
   { orderNo: 'CR20260908SEEDA02', userId: 'u1', packId: 'c6', amount: 6, crystal: 6, channel: 'wechat', payCode: 'QWPAY:wechat:CR20260908SEEDA02:SEED', status: 'paid', createdAt: stamp(6, 10, 11), paidAt: stamp(6, 10, 12) }
 ];
 
+// ---------------------------------------------------------------------------
+// 星际天梯（联机挑战）
+//   · season  当前赛季；profile 记段位积分与每日场次；rivals 是演示用的「星海对手」
+//   · rivals 是演示数据：人少时匹配不到真人，用它们补位并撑起天梯榜，
+//     页面上会给这些条目打一枚「演示」小标，不冒充真实用户。
+// ---------------------------------------------------------------------------
+
+const ladderSeasons = [
+  { id: 's1', name: 'S1 · 星海启航', startAt: dateOnly(21), endAt: dateOnly(-49), status: 'active' }
+];
+
+const ladderProfiles = {
+  u1: {
+    seasonId: 's1',
+    rating: 1128,
+    tier: 'streak',
+    wins: 7,
+    losses: 4,
+    draws: 1,
+    streak: 2,
+    bestStreak: 4,
+    bestScore: 1180,
+    dailyDate: TODAY,
+    dailyUsed: 0,
+    guard: 0,
+    updatedAt: stamp(0, 19, 40)
+  }
+};
+
+// 演示对手：积分围绕玩家分布，accuracy 决定它们大概能答对几成
+const ladderRivals = [
+  { id: 'r1', name: '豆豆', avatar: '🐣', rating: 980, accuracy: 0.42, title: '刚学会起飞' },
+  { id: 'r2', name: '莉莉', avatar: '👧', rating: 1090, accuracy: 0.50, title: '细心派' },
+  { id: 'r3', name: '小航', avatar: '🧑‍🚀', rating: 1180, accuracy: 0.58, title: '稳扎稳打' },
+  { id: 'r4', name: '阿星', avatar: '👦', rating: 1245, accuracy: 0.64, title: '手速很快' },
+  { id: 'r5', name: '小舟', avatar: '🧑‍🎓', rating: 1350, accuracy: 0.72, title: '公式记得牢' },
+  { id: 'r6', name: '银河', avatar: '🌠', rating: 1420, accuracy: 0.78, title: '星海老手' }
+];
+
+const ladderMatches = [];
+const ladderAnswers = [];
+
 module.exports = {
   TODAY,
+  ladderSeasons,
+  ladderProfiles,
+  ladderRivals,
+  ladderMatches,
+  ladderAnswers,
   users,
   knowledgePoints,
   learningSessions,

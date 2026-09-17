@@ -23,6 +23,7 @@ const agentRoutes = require('./routes/agent');
 const studentRoutes = require('./routes/student');
 const vipRoutes = require('./routes/vip');
 const walletRoutes = require('./routes/wallet');
+const ladderRoutes = require('./routes/ladder');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
@@ -76,6 +77,7 @@ app.use('/api/agent', agentRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/vip', vipRoutes);
 app.use('/api/wallet', walletRoutes);
+app.use('/api/ladder', ladderRoutes);
 app.use('/api/admin', adminRoutes);
 
 // 未命中的接口统一返回 JSON，避免被前端路由兜底成 HTML
@@ -128,9 +130,10 @@ app.listen(PORT, function () {
   console.log('🤖 智能体: http://localhost:' + PORT + '/pages/student/agent.html');
   console.log('📊 学习报告: http://localhost:' + PORT + '/pages/student/report.html');
   console.log('👑 会员领航舱: http://localhost:' + PORT + '/pages/student/vip.html');
+  console.log('🛸 星际天梯: http://localhost:' + PORT + '/pages/student/ladder.html');
   console.log('🧩 分层: 接入层 -> 业务层 -> 持久层(' + config.db.driver + ') / 缓存层(' + cache.driver + ')');
   console.log('🏗 数据表: ' + repos.info().tables.map(function (item) { return item.table + '(' + item.rows + ')'; }).join(' '));
-  console.log('🛰 管理控制台: http://localhost:' + PORT + '/pages/admin/console.html（教师 teacher / 运营 admin）');
+  console.log('🛰 管理控制台: http://localhost:' + PORT + '/pages/admin/console.html（运营 admin / admin123）');
 });
 
 module.exports = app;

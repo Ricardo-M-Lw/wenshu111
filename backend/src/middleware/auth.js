@@ -36,7 +36,7 @@ function requireAuth(req, res, next) {
   });
 }
 
-// 角色校验：对齐若依的角色（学生 / 教师 / 运营）
+// 角色校验：对齐若依的角色（学生 / 运营）
 function requireRole() {
   const roles = Array.prototype.slice.call(arguments);
   return function (req, res, next) {

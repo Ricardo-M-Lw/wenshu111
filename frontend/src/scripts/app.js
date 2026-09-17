@@ -1078,7 +1078,7 @@
         : '';
 
       const user = AUTH.getUser() || {};
-      const meta = [user.grade, user.className, user.school].filter(Boolean).join(' · ');
+      const meta = [user.grade, user.school].filter(Boolean).join(' · ');
 
       root.innerHTML = ''
         + '<section class="qw-account-card">'

@@ -1,5 +1,5 @@
 /**
- * 问数星途 · 管理控制台（教师 / 运营）
+ * 问数星途 · 管理控制台（运营）
  * 对应框架「二、分层框架总览」的管理端一层，只做「取数据 + 渲染」：
  *   - 权限一律由后端 /api/admin/* 的 requirePermission 判定，前端只做「受限」提示；
  *   - 题库接口本来就不下发正确答案，管理端同样看不到，「不泄答案」不变量在后台也成立。
@@ -13,18 +13,18 @@
   if (!AUTH || !app) return;
 
   var MODULES = [
-    { id: 'overview', icon: '🛰', label: '经营概览', title: '经营与学情概览', sub: '用户、学习、积分与会员的一屏快照', url: '/api/admin/overview', permission: 'admin:overview:read', roles: ['teacher', 'ops'] },
-    { id: 'questions', icon: '📚', label: '题库管理', title: '题库浏览', sub: '题干、选项与提示可见；正确答案只留在服务端', url: '/api/admin/questions', permission: 'admin:question:list', roles: ['teacher', 'ops'] },
-    { id: 'errors', icon: '🧭', label: '错因字典', title: '错因字典', sub: '错因释义 + 真实命中次数，用来改进讲题脚本', url: '/api/admin/error-types', permission: 'admin:error-type:list', roles: ['teacher', 'ops'] },
+    { id: 'overview', icon: '🛰', label: '经营概览', title: '经营与学情概览', sub: '用户、学习、积分与会员的一屏快照', url: '/api/admin/overview', permission: 'admin:overview:read', roles: ['ops'] },
+    { id: 'questions', icon: '📚', label: '题库管理', title: '题库浏览', sub: '题干、选项与提示可见；正确答案只留在服务端', url: '/api/admin/questions', permission: 'admin:question:list', roles: ['ops'] },
+    { id: 'errors', icon: '🧭', label: '错因字典', title: '错因字典', sub: '错因释义 + 真实命中次数，用来改进讲题脚本', url: '/api/admin/error-types', permission: 'admin:error-type:list', roles: ['ops'] },
     { id: 'orders', icon: '💳', label: '会员订单', title: '会员订单', sub: '下单、支付与收入 —— 仅运营角色可见', url: '/api/admin/orders', permission: 'admin:order:list', roles: ['ops'] },
-    { id: 'members', icon: '👑', label: '会员成员', title: '会员成员', sub: '已开通领航舱的学员与有效期', url: '/api/admin/members', permission: 'admin:member:list', roles: ['teacher', 'ops'] }
+    { id: 'members', icon: '👑', label: '会员成员', title: '会员成员', sub: '已开通领航舱的学员与有效期', url: '/api/admin/members', permission: 'admin:member:list', roles: ['ops'] }
   ];
 
   var state = { user: AUTH.getUser(), module: 'overview', knowledgePoints: [], questionFilter: '' };
 
   function esc(value) { return AUTH.escapeText(value); }
   function num(value) { return typeof value === 'number' ? value.toLocaleString('zh-CN') : esc(value == null ? '—' : value); }
-  function roleName(role) { return { student: '学生', teacher: '教师', ops: '运营' }[role] || role || '未知'; }
+  function roleName(role) { return { student: '学生', ops: '运营' }[role] || role || '未知'; }
 
   function findModule(id) {
     for (var i = 0; i < MODULES.length; i += 1) {
@@ -79,9 +79,8 @@
       var u = d.users || {}, l = d.learning || {}, g = d.gamification || {}, m = d.membership || {}, p = d.platform || {};
       var ranking = g.ranking || [];
       return card('用户与角色', '平台注册账号与内部人员构成', grid([
-          kpi('用户总数', num(u.total), '学生 / 教师 / 运营'),
+          kpi('用户总数', num(u.total), '学生 / 运营'),
           kpi('学生', num(u.student), '学习端账号'),
-          kpi('教师', num(u.teacher), '可见题库与错因字典'),
           kpi('运营', num(u.ops), '可见会员订单与收入')
         ]))
         + card('学习与内容', '知识点、题库与学习会话完成情况', grid([

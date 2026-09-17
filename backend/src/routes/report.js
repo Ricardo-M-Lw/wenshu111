@@ -126,7 +126,7 @@ router.get('/overview', (req, res) => {
 
   res.json({
     data: {
-      student: { id: student.id, name: student.name, nickname: student.nickname, grade: student.grade, className: student.className, avatar: student.avatar },
+      student: { id: student.id, name: student.name, nickname: student.nickname, grade: student.grade, avatar: student.avatar },
       dateLabel: dayLabel(now),
       updatedAt: stamp(0, now.getHours(), now.getMinutes()),
       today: {
@@ -175,7 +175,7 @@ router.get('/mastery', (req, res) => {
 
   res.json({
     data: {
-      student: { id: student.id, name: student.name, grade: student.grade, className: student.className },
+      student: { id: student.id, name: student.name, grade: student.grade },
       dateLabel: dayLabel(new Date()),
       mastery,
       trend: masteryTrend,
@@ -203,7 +203,7 @@ router.get('/sessions', (req, res) => {
 
   res.json({
     data: {
-      student: { id: student.id, name: student.name, grade: student.grade, className: student.className, avatar: student.avatar },
+      student: { id: student.id, name: student.name, grade: student.grade, avatar: student.avatar },
       dateLabel: dayLabel(new Date()),
       total: sessions.length,
       summary: {
@@ -251,7 +251,7 @@ router.get('/session/:id', (req, res) => {
   res.json({
     data: Object.assign({}, session, {
       knowledgePoint: kp,
-      student: student ? { id: student.id, name: student.name, grade: student.grade, className: student.className } : null,
+      student: student ? { id: student.id, name: student.name, grade: student.grade } : null,
       dateLabel: dayLabel(new Date(session.createdAt)),
       steps: stepListFor(session.knowledgePointId, session)
     })
@@ -274,7 +274,7 @@ router.get('/settings', (req, res) => {
       quietHours: { enabled: true, start: '21:30', end: '07:00' },
       imagePolicy: 'session',
       reminders: { dailyReport: true, weeklyReport: true, weeklyReportDay: 0 },
-      privacy: { shareRanking: false, shareToTeacher: true, analytics: true },
+      privacy: { shareRanking: false, shareToFamily: true, analytics: true },
       updatedAt: new Date().toISOString()
     };
   }

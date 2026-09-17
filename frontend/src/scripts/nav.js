@@ -33,6 +33,7 @@
     const ALIAS = {
       quiz: 'classroom',
       correction: 'classroom',
+      ladder: 'planet',
       checkin: 'level',
       badge: 'level',
       vip: 'level',
@@ -66,6 +67,7 @@
         { id: 'classroom', label: '讲题启发', href: './classroom.html' },
         { id: 'quiz', label: '动手练会', href: './quiz.html' },
         { id: 'correction', label: '归因改对', href: './correction.html' },
+        { id: 'ladder', label: '星际天梯', href: './ladder.html' },
         { id: 'level', label: '思维星座榜', href: './level.html' }
       ];
       const TOP_ALIAS = {

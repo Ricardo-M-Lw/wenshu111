@@ -266,6 +266,100 @@ const TABLES = [
       { name: 'idx_wallet_user', columns: ['user_id'], comment: '按学生查流水' },
       { name: 'idx_wallet_time', columns: ['user_id', 'created_at'], comment: '按时间倒序翻页' }
     ]
+  },
+  {
+    name: 'qw_ladder_season',
+    comment: '天梯赛季（星际天梯）',
+    columns: [
+      { name: 'id', type: 'VARCHAR(32)', pk: true, notNull: true, comment: '赛季主键' },
+      { name: 'name', type: 'VARCHAR(64)', notNull: true, comment: '赛季名称' },
+      { name: 'start_at', type: 'DATE', comment: '开始日期' },
+      { name: 'end_at', type: 'DATE', comment: '结束日期' },
+      { name: 'status', type: 'VARCHAR(16)', default: 'active', comment: 'active / closed' }
+    ],
+    indexes: [
+      { name: 'idx_lseason_status', columns: ['status'], comment: '按状态取当前赛季' }
+    ]
+  },
+  {
+    name: 'qw_ladder_profile',
+    comment: '天梯档案（段位 / 积分 / 战绩 / 每日场次 / 家长守护开关）',
+    columns: [
+      { name: 'user_id', type: 'VARCHAR(32)', pk: true, notNull: true, comment: '学生' },
+      { name: 'season_id', type: 'VARCHAR(32)', comment: '所属赛季' },
+      { name: 'rating', type: 'INT', default: 1000, comment: '天梯积分' },
+      { name: 'tier', type: 'VARCHAR(16)', comment: '段位标识' },
+      { name: 'wins', type: 'INT', default: 0, comment: '胜场' },
+      { name: 'losses', type: 'INT', default: 0, comment: '负场' },
+      { name: 'draws', type: 'INT', default: 0, comment: '平局' },
+      { name: 'streak', type: 'INT', default: 0, comment: '当前连胜' },
+      { name: 'best_streak', type: 'INT', default: 0, comment: '最高连胜' },
+      { name: 'best_score', type: 'INT', default: 0, comment: '单局最高分' },
+      { name: 'daily_date', type: 'DATE', comment: '每日场次所属日期（跨天重置）' },
+      { name: 'daily_used', type: 'INT', default: 0, comment: '当天已打场次' },
+      { name: 'guard', type: 'TINYINT', default: 0, comment: '是否遵守学习时段 / 免打扰（家长守护）' },
+      { name: 'updated_at', type: 'DATETIME', comment: '更新时间' }
+    ],
+    indexes: [
+      { name: 'idx_lprofile_rating', columns: ['rating'], comment: '天梯榜排序' },
+      { name: 'idx_lprofile_tier', columns: ['tier'], comment: '按段位统计' }
+    ]
+  },
+  {
+    name: 'qw_ladder_match',
+    comment: '天梯对局（题面与正确答案仅服务端可见，接口统一剥离）',
+    columns: [
+      { name: 'id', type: 'VARCHAR(40)', pk: true, notNull: true, comment: '对局主键' },
+      { name: 'user_id', type: 'VARCHAR(32)', notNull: true, comment: '挑战者' },
+      { name: 'season_id', type: 'VARCHAR(32)', comment: '赛季' },
+      { name: 'mode', type: 'VARCHAR(16)', default: 'quick', comment: 'quick 快速匹配' },
+      { name: 'opponent_type', type: 'VARCHAR(16)', comment: 'rival 星海对手 / bot 机器人' },
+      { name: 'opponent_name', type: 'VARCHAR(32)', comment: '对手昵称' },
+      { name: 'opponent_avatar', type: 'VARCHAR(16)', comment: '对手头像' },
+      { name: 'opponent_rating', type: 'INT', comment: '对手积分' },
+      { name: 'opponent_plan', type: 'JSON', comment: '对手逐题表现（服务端预演，用于进度条）' },
+      { name: 'seed', type: 'VARCHAR(32)', comment: '出题种子（同一局双方同题）' },
+      { name: 'knowledge_point_ids', type: 'JSON', comment: '本局覆盖的知识点' },
+      { name: 'questions', type: 'JSON', comment: '题面 + 正确答案（仅服务端）' },
+      { name: 'total', type: 'INT', comment: '题目数' },
+      { name: 'current_seq', type: 'INT', default: 1, comment: '当前进行到第几题（服务端推进）' },
+      { name: 'seq_started_at', type: 'DATETIME', comment: '本题开始时间：服务端计时，客户端改不了' },
+      { name: 'status', type: 'VARCHAR(16)', comment: 'playing / done / abandoned' },
+      { name: 'my_score', type: 'INT', default: 0, comment: '我的得分' },
+      { name: 'my_correct', type: 'INT', default: 0, comment: '我答对的题数' },
+      { name: 'opp_score', type: 'INT', comment: '对手得分' },
+      { name: 'opp_correct', type: 'INT', comment: '对手答对的题数' },
+      { name: 'result', type: 'VARCHAR(8)', comment: 'win / lose / draw' },
+      { name: 'rating_before', type: 'INT', comment: '开局积分' },
+      { name: 'rating_after', type: 'INT', comment: '结算积分' },
+      { name: 'rating_delta', type: 'INT', comment: '积分变化' },
+      { name: 'reward', type: 'INT', comment: '本局获得的星尘' },
+      { name: 'created_at', type: 'DATETIME', comment: '开局时间' },
+      { name: 'ended_at', type: 'DATETIME', comment: '结束时间' }
+    ],
+    indexes: [
+      { name: 'idx_lmatch_user', columns: ['user_id'], comment: '按学生查对局' },
+      { name: 'idx_lmatch_status', columns: ['status'], comment: '按状态巡检未结束对局' }
+    ]
+  },
+  {
+    name: 'qw_ladder_answer',
+    comment: '天梯逐题作答记录（服务端判分）',
+    columns: [
+      { name: 'id', type: 'VARCHAR(64)', pk: true, notNull: true, comment: '作答主键（对局 + 题号）' },
+      { name: 'match_id', type: 'VARCHAR(40)', notNull: true, comment: '对局' },
+      { name: 'user_id', type: 'VARCHAR(32)', notNull: true, comment: '作答人' },
+      { name: 'seq', type: 'INT', notNull: true, comment: '第几题（1 起）' },
+      { name: 'knowledge_point_id', type: 'VARCHAR(32)', comment: '知识点' },
+      { name: 'choice', type: 'INT', comment: '所选下标' },
+      { name: 'correct', type: 'TINYINT', comment: '是否答对' },
+      { name: 'cost_ms', type: 'INT', comment: '本题用时（毫秒）' },
+      { name: 'created_at', type: 'DATETIME', comment: '作答时间' }
+    ],
+    indexes: [
+      { name: 'uk_lanswer_match_seq', columns: ['match_id', 'seq'], unique: true, comment: '同一对局同一题只记一次' },
+      { name: 'idx_lanswer_user', columns: ['user_id'], comment: '按学生查作答' }
+    ]
   }
 ];
 

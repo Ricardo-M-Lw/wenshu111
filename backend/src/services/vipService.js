@@ -275,7 +275,7 @@ function pay(user, body) {
   });
 }
 
-// ---------------- 管理端（教师 / 运营）----------------
+// ---------------- 管理端（运营）----------------
 function adminOrders() {
   const items = repos.vip.listOrders({ limit: 50 }).map(publicOrder);
   const paid = repos.vip.listPaidOrders();

@@ -1,4 +1,4 @@
-/* 管理控制台（教师 / 运营）—— 对应框架「二、分层框架总览」的管理端一层
+/* 管理控制台（运营）—— 对应框架「二、分层框架总览」的管理端一层
    复用 common.css 的变量与 space.css 的星途主题，这里只补控制台自己的骨架样式 */
 
 .ad-shell { position: relative; z-index: 2; display: flex; gap: 18px; max-width: 1460px; margin: 0 auto; padding: 20px; align-items: flex-start; }

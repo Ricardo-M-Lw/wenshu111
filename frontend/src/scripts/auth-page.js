@@ -7,10 +7,10 @@
 
   const AUTH = window.QWAuth;
   const HOME = '/pages/student/home.html';
-  // 三类角色各留一个演示账号，方便课堂上一键切换身份
+  // 学生与运营各留一个演示账号，方便演示时一键切换身份
+  // 家长使用学生端同一入口，登录后在学习报告页查看孩子的星图
   const DEMOS = [
     { account: '13800000001', password: '123456', label: '👦 学生演示号' },
-    { account: 'teacher', password: '123456', label: '🧑‍🏫 教师演示号' },
     { account: 'admin', password: 'admin123', label: '🛰 运营演示号' }
   ];
 
@@ -96,7 +96,7 @@
       try {
         const user = await AUTH.login({ account, password, remember });
         btn.textContent = '登录成功，正在进入…';
-        // 学生进学习首页，教师 / 运营进管理控制台
+        // 学生进学习首页，运营进管理控制台
         window.location.replace(safeRedirect() || AUTH.homeFor(user.role));
       } catch (err) {
         showMsg(err.message);

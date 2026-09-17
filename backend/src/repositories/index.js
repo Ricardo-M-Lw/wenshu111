@@ -11,6 +11,7 @@ module.exports = {
   study: require('./studyRepository'),
   vip: require('./vipRepository'),
   wallet: require('./walletRepository'),
+  ladder: require('./ladderRepository'),
 
   // 表结构信息：管理端与技术自检用
   schema: db,

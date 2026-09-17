@@ -9,7 +9,6 @@
   const USER_KEY = 'qw_user';
   const ROLE_HOME = {
     student: '/pages/student/home.html',
-    teacher: '/pages/admin/console.html',
     ops: '/pages/admin/console.html'
   };
   const LOGIN_PAGE = '/pages/auth/login.html';
@@ -58,13 +57,13 @@
   function pageRole() {
     const path = window.location.pathname;
     if (path.indexOf('/pages/student/') !== -1) return 'student';
-    // 管理端：教师 / 运营共用一套控制台，守卫按「内部人员」处理
+    // 管理端：运营使用控制台，守卫按「内部人员」处理
     if (path.indexOf('/pages/admin/') !== -1) return 'staff';
     return null;
   }
 
   function isStaff(user) {
-    return !!user && (user.role === 'teacher' || user.role === 'ops');
+    return !!user && user.role === 'ops';
   }
 
   function redirectToLogin(role, message) {
@@ -230,11 +229,11 @@
     if (!role) return null;
     const user = getUser();
     if (!getToken() || !user) {
-      redirectToLogin(role === 'staff' ? 'teacher' : role,
-        role === 'staff' ? '请先登录教师 / 运营账号' : '请先登录再开始学习');
+      redirectToLogin(role === 'staff' ? 'ops' : role,
+        role === 'staff' ? '请先登录运营账号' : '请先登录再开始学习');
       return null;
     }
-    // 管理端只放教师 / 运营进来，学生误入会被送回自己的首页
+    // 管理端只放运营进来，学生误入会被送回自己的首页
     if (role === 'staff') {
       if (!isStaff(user)) {
         window.location.replace(homeFor(user.role));

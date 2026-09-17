@@ -23,7 +23,7 @@ function defaultSetting() {
     quietHours: { enabled: true, start: '21:30', end: '07:00' },
     imagePolicy: 'session',
     reminders: { dailyReport: true, weeklyReport: true, weeklyReportDay: 0 },
-    privacy: { shareRanking: false, shareToTeacher: true, analytics: true },
+    privacy: { shareRanking: false, shareToFamily: true, analytics: true },
     updatedAt: new Date().toISOString()
   };
 }

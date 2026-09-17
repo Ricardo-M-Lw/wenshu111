@@ -204,7 +204,8 @@ async function runPage(htmlFile, urlPath) {
     ['student-report-mastery', '/pages/student/report.html?tab=mastery'],
     ['student-report-sessions', '/pages/student/report.html?tab=sessions'],
     ['student-report-detail', '/pages/student/report.html?tab=sessions&id=s4'],
-    ['student-report-settings', '/pages/student/report.html?tab=settings']
+    ['student-report-settings', '/pages/student/report.html?tab=settings'],
+    ['student-ladder', '/pages/student/ladder.html']
   ];
 
   let failed = 0;
@@ -234,10 +235,10 @@ async function runPage(htmlFile, urlPath) {
 
   await runList(pages, studentToken, studentUser);
 
-  // 管理端（教师 / 运营）：控制台页面同样要能无错跑起来
+  // 管理端（运营）：控制台页面同样要能无错跑起来
   const staffLogin = await fetch(BASE + '/api/auth/login', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ account: 'teacher', password: '123456' })
+    body: JSON.stringify({ account: 'admin', password: 'admin123' })
   });
   const staff = await staffLogin.json();
   const staffPages = [

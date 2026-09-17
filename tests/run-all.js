@@ -31,7 +31,8 @@ const SUITES = [
   ['前端页面运行冒烟（轻量 DOM）', 'dom-smoke.js', {}],
   ['智能体前端全流程冒烟', 'agent-ui-smoke.js', {}],
   ['小问形象与语音唤醒冒烟（30 种表情 / 状态机 / 唤醒词）', 'xiaowen-ui-smoke.js', {}],
-  ['讲题课堂前端全流程冒烟', 'classroom-ui-smoke.js', {}]
+  ['讲题课堂前端全流程冒烟', 'classroom-ui-smoke.js', {}],
+  ['星际天梯冒烟（开局不泄答案 / 服务端判分 / 结算与家长守护）', 'ladder-smoke.js', { selfHost: true }]
 ];
 
 function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }

@@ -4,16 +4,15 @@
 
 const ROLES = {
   student: { code: 'student', name: '学生', desc: '学习、讲题、答题、查看自己的报告' },
-  teacher: { code: 'teacher', name: '教师', desc: '查看班级学情、题库与错因字典' },
   ops: { code: 'ops', name: '运营', desc: '题库、错因字典、会员订单与经营看板' }
 };
 
 // 权限码命名对齐若依的 模块:资源:动作
 const PERMISSIONS = {
-  'admin:overview:read': ['teacher', 'ops'],
-  'admin:question:list': ['teacher', 'ops'],
-  'admin:error-type:list': ['teacher', 'ops'],
-  'admin:member:list': ['teacher', 'ops'],
+  'admin:overview:read': ['ops'],
+  'admin:question:list': ['ops'],
+  'admin:error-type:list': ['ops'],
+  'admin:member:list': ['ops'],
   'admin:order:list': ['ops']
 };
 
@@ -32,8 +31,7 @@ function permissionsOf(user) {
 }
 
 function isStaff(user) {
-  const role = roleOf(user);
-  return role === 'teacher' || role === 'ops';
+  return roleOf(user) === 'ops';
 }
 
 module.exports = { ROLES, PERMISSIONS, roleOf, can, permissionsOf, isStaff };

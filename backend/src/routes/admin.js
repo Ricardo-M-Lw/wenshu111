@@ -1,4 +1,4 @@
-// 管理端（教师 / 运营）—— 对应框架「二、分层框架总览」的管理端一层
+// 管理端（运营）—— 对应框架「二、分层框架总览」的管理端一层
 // 权限由 requirePermission 控制，权限码与角色映射写在 permissions.js；
 // 接入若依 RuoYi 后由菜单 / 按钮权限下发，本文件与前端都不用改。
 
@@ -28,7 +28,6 @@ router.get('/overview', requirePermission('admin:overview:read'), asyncHandler(a
       users: {
         total: repos.user.count(),
         student: students.length,
-        teacher: repos.user.findByRole('teacher').length,
         ops: repos.user.findByRole('ops').length
       },
       learning: {
@@ -99,7 +98,7 @@ router.get('/error-types', requirePermission('admin:error-type:list'), asyncHand
   }));
 }));
 
-// 会员订单（仅运营角色可见，教师会被 403 拦下）
+// 会员订单（仅运营角色可见，需要 admin:order:list 权限码）
 router.get('/orders', requirePermission('admin:order:list'), asyncHandler(async function (req, res) {
   reply(res, vipService.adminOrders());
 }));

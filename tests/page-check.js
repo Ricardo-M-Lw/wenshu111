@@ -36,6 +36,7 @@ function check(label, ok, detail) {
     ['/pages/student/correction.html', ['correctionApp', 'correction.js', 'auth.js']],
     ['/pages/student/report.html', ['reportApp', 'report.js', 'auth.js', 'nav.js']],
     ['/pages/student/vip.html', ['vipApp', 'vip.js', 'auth.js', 'nav.js', 'space.css', 'space.js']],
+    ['/pages/student/ladder.html', ['ladderApp', 'ladder.js', 'auth.js', 'nav.js', 'space.css', 'ladder.css']],
     ['/pages/admin/console.html', ['adminApp', 'admin.js', 'admin.css', 'auth.js', 'space.css']],
   ];
 
@@ -62,6 +63,8 @@ function check(label, ok, detail) {
     '/src/scripts/agent-page.js', '/src/scripts/classroom.js', '/src/scripts/correction.js',
     '/src/scripts/report.js',
     '/src/scripts/vip.js',
+    '/src/scripts/ladder.js',
+    '/src/styles/ladder.css',
     '/assets/images/knowledge/kp1-function.svg',
     '/assets/images/knowledge/kp2-triangle.svg',
     '/assets/images/knowledge/kp3-pythagoras.svg'
@@ -84,6 +87,21 @@ function check(label, ok, detail) {
     ['/api/agent/suggest?kpId=kp3', d => !!d.title && !!d.action]
   ];
   for (const [url, ok] of apis) {
+    const res = await fetch(BASE + url, { headers: auth });
+    const body = await res.json();
+    let good = res.status === 200;
+    try { good = good && !!ok(body.data); } catch (e) { good = false; }
+    check('api ' + url, good, 'status=' + res.status);
+  }
+
+  // 星际天梯：赛季 / 我的段位 / 天梯榜（只读，开局与结算在 ladder-smoke.js 里单独验证）
+  const ladderApis = [
+    ['/api/ladder/season', d => d.season.id === 's1' && d.tiers.length === 9 && d.rules.questionCount === 8],
+    // 每日场次按会员态取值：免费 3 局 / 领航员 10 局（不写死 3，避免依赖「这台机器还没开过会员」）
+    ['/api/ladder/me', d => d.tier.id === 'streak' && d.daily.limit === (d.daily.vip ? 10 : 3) && Array.isArray(d.recent)],
+    ['/api/ladder/leaderboard', d => d.items.length >= 1 && d.items[0].rank === 1]
+  ];
+  for (const [url, ok] of ladderApis) {
     const res = await fetch(BASE + url, { headers: auth });
     const body = await res.json();
     let good = res.status === 200;

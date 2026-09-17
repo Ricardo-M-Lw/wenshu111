@@ -21,6 +21,7 @@ export default defineConfig({
         'student-level': resolve(__dirname, 'pages/student/level.html'),
         'student-agent': resolve(__dirname, 'pages/student/agent.html'),
         'student-report': resolve(__dirname, 'pages/student/report.html'),
+        'student-ladder': resolve(__dirname, 'pages/student/ladder.html'),
         'admin-console': resolve(__dirname, 'pages/admin/console.html'),
       },
     },

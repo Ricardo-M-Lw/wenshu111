@@ -1,0 +1,259 @@
+/* ===========================================================================
+   问数星途 · 星际天梯（ladder.html）
+   ---------------------------------------------------------------------------
+   只服务天梯一个页面，所以类名统一用 sql- 前缀，避免和 common.css / space.css 撞车。
+   配色优先走 body.qw-deep 上的设计令牌（--sq-ink / --sq-surface / --sq-line /
+   --sq-muted / --sq-shadow），取不到值时用括号里的回退色，保证单独打开也好看。
+   =========================================================================== */
+
+/* 天梯页把版心稍微放宽：并排进度条 + 四选一，比别的页面更需要横向空间 */
+body.qw-deep #ladderApp { max-width: 1280px; --sql-radius: 22px; }
+
+.sql-head { margin-bottom: 16px; }
+.sql-head h2 { font-family: var(--sq-display, 'ZCOOL QingKe HuangYou', sans-serif); letter-spacing: 1px; }
+
+.sql-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.sql-col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+@media (max-width: 980px) { .sql-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* 通用卡片 */
+.sql-card {
+  background: var(--sq-surface, rgba(14, 20, 48, .72));
+  border: 1px solid var(--sq-line, rgba(150, 180, 255, .20));
+  border-radius: var(--sql-radius, 22px);
+  box-shadow: var(--sq-shadow, 0 20px 46px rgba(0, 0, 0, .45));
+  padding: 18px 20px 20px;
+  backdrop-filter: blur(12px);
+}
+.sql-card > header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.sql-card > header h3 { font-size: 17px; font-weight: 700; color: var(--sq-ink, #EAF1FF); margin: 0; }
+.sql-card > header span { font-size: 12px; color: var(--sq-muted, #93A5C6); }
+.sql-sub { margin: 16px 0 8px; font-size: 13px; font-weight: 600; color: var(--sq-ink-2, #C3D0EA); }
+
+/* ---------------------------------------------------------------------------
+   1 · 段位主卡
+   --------------------------------------------------------------------------- */
+.sql-hero {
+  display: grid; grid-template-columns: 148px minmax(0, 1fr) minmax(220px, 268px);
+  gap: 20px; align-items: center;
+  padding: 22px 24px; margin-bottom: 18px; border-radius: 26px;
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgba(255, 197, 61, .16), transparent 58%),
+    radial-gradient(90% 120% at 100% 10%, rgba(124, 108, 245, .26), transparent 60%),
+    var(--sq-surface, rgba(14, 20, 48, .74));
+  border: 1px solid var(--sq-line, rgba(150, 180, 255, .20));
+  box-shadow: var(--sq-shadow, 0 20px 46px rgba(0, 0, 0, .45));
+}
+@media (max-width: 1080px) { .sql-hero { grid-template-columns: 132px minmax(0, 1fr); } .sql-hero-cta { grid-column: 1 / -1; } }
+@media (max-width: 640px) { .sql-hero { grid-template-columns: minmax(0, 1fr); text-align: center; } .sql-hero-badge { margin: 0 auto; } }
+
+.sql-hero-badge { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sql-hero-badge svg { filter: drop-shadow(0 12px 26px rgba(0, 0, 0, .45)); }
+.sql-hero-rank { font-size: 12px; font-weight: 700; color: #4A2400; background: linear-gradient(135deg, #FFD75E, #FFA417); border-radius: 999px; padding: 3px 12px; }
+.sql-tier-emoji { font-size: 46px; line-height: 1; }
+
+.sql-hero-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.sql-hero-title h2 { margin: 0; font-size: 30px; font-family: var(--sq-display, 'ZCOOL QingKe HuangYou', sans-serif); letter-spacing: 1.5px; color: #FFF7E0; }
+.sql-hero-score { font-size: 30px; font-weight: 800; color: var(--sq-sun, #FFC53D); font-family: 'DM Sans', sans-serif; }
+.sql-hero-score i { font-size: 13px; font-style: normal; font-weight: 500; color: var(--sq-muted, #93A5C6); margin-left: 3px; }
+.sql-bar { height: 10px; border-radius: 999px; background: rgba(255, 255, 255, .12); overflow: hidden; margin: 10px 0 8px; }
+.sql-bar span { display: block; height: 100%; border-radius: 999px; background: var(--sq-sun, #FFC53D); box-shadow: 0 0 14px rgba(255, 197, 61, .6); transition: width .5s ease; }
+.sql-hero-next { margin: 0 0 12px; font-size: 13px; color: var(--sq-ink-2, #C3D0EA); }
+.sql-hero-next b { color: var(--sq-sun, #FFC53D); font-size: 15px; }
+.sql-hero-stats { display: flex; flex-wrap: wrap; gap: 8px 16px; font-size: 12.5px; color: var(--sq-muted, #93A5C6); }
+.sql-hero-stats b { color: var(--sq-ink, #EAF1FF); font-size: 14px; }
+
+.sql-hero-cta { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.sql-btn-play {
+  border: 0; cursor: pointer; border-radius: 16px; padding: 15px 18px;
+  font-size: 16px; font-weight: 700; color: #2A1A00; font-family: inherit;
+  background: linear-gradient(135deg, #FFD75E, #FF9F1C);
+  box-shadow: 0 16px 34px rgba(255, 159, 28, .38);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.sql-btn-play:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 20px 42px rgba(255, 159, 28, .52); }
+.sql-btn-play:disabled { cursor: not-allowed; color: #B9C3D6; background: rgba(255, 255, 255, .10); box-shadow: none; }
+
+.sql-quota { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--sq-muted, #93A5C6); }
+.sql-pips { display: inline-flex; gap: 5px; }
+.sql-pips i { width: 11px; height: 11px; border-radius: 50%; background: rgba(255, 255, 255, .16); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+.sql-pips i.is-on { background: linear-gradient(135deg, #FFD75E, #FF9F1C); box-shadow: 0 0 10px rgba(255, 197, 61, .6); }
+
+.sql-hero-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.sql-chip {
+  appearance: none; cursor: pointer; font-family: inherit; font-size: 12.5px; font-weight: 600;
+  padding: 8px 12px; border-radius: 999px; text-decoration: none; text-align: center;
+  color: var(--sq-ink-2, #C3D0EA); background: rgba(255, 255, 255, .08);
+  border: 1px solid var(--sq-line, rgba(150, 180, 255, .20));
+  transition: background .16s ease, color .16s ease;
+}
+.sql-chip:hover { background: rgba(255, 197, 61, .18); color: #FFE7AE; }
+.sql-chip.is-link { color: #8DE6DF; }
+
+/* ---------------------------------------------------------------------------
+   2 · 家长守护 / 赛季规则 / 近 10 局
+   --------------------------------------------------------------------------- */
+.sql-guard-list, .sql-rule-list { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-direction: column; gap: 7px; }
+.sql-guard-list li, .sql-rule-list li { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; font-size: 13px; }
+.sql-guard-list li span, .sql-rule-list li span { color: var(--sq-muted, #93A5C6); flex: none; }
+.sql-guard-list li b, .sql-rule-list li b { color: var(--sq-ink, #EAF1FF); font-weight: 600; text-align: right; }
+.sql-guard > p { margin: 0; font-size: 13px; line-height: 1.7; color: var(--sq-ink-2, #C3D0EA); }
+.sql-guard-now { margin-top: 12px !important; font-weight: 700; }
+.sql-guard-now.is-ok { color: #7BE495; }
+.sql-guard-now.is-no { color: #FFB3A0; }
+.sql-guard-tip { margin-top: 6px !important; font-size: 12.5px !important; color: var(--sq-muted, #93A5C6) !important; }
+.sql-guard-note { margin-top: 10px !important; font-size: 11.5px !important; color: var(--sq-muted, #93A5C6) !important; }
+
+.sql-switch { width: 52px; height: 28px; flex: none; border-radius: 999px; border: 1px solid var(--sq-line, rgba(150, 180, 255, .24)); background: rgba(255, 255, 255, .10); cursor: pointer; padding: 0; position: relative; transition: background .18s ease; }
+.sql-switch i { position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: 50%; background: #EAF1FF; transition: transform .18s ease; }
+.sql-switch.is-on { background: linear-gradient(135deg, #35C5BE, #2BA4A0); border-color: transparent; }
+.sql-switch.is-on i { transform: translateX(24px); }
+
+.sql-tier-ladder { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 7px; }
+.sql-tier-ladder li { display: flex; align-items: center; gap: 7px; padding: 6px 9px; border-radius: 12px; font-size: 12.5px; background: color-mix(in srgb, var(--c) 16%, transparent); border: 1px solid color-mix(in srgb, var(--c) 40%, transparent); }
+.sql-tier-ladder li i { font-style: normal; }
+.sql-tier-ladder li b { color: var(--sq-ink, #EAF1FF); }
+.sql-tier-ladder li span { margin-left: auto; color: var(--sq-muted, #93A5C6); font-size: 11.5px; }
+
+.sql-rec-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; max-height: 316px; overflow: auto; }
+.sql-rec { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto auto auto; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; font-size: 13px; background: rgba(255, 255, 255, .05); border-left: 3px solid rgba(255, 255, 255, .18); }
+.sql-rec-win { border-left-color: #34C759; }
+.sql-rec-lose { border-left-color: #EE5A6F; }
+.sql-rec-draw { border-left-color: #F5A623; }
+.sql-rec-ic { font-size: 15px; }
+.sql-rec-opp { color: var(--sq-ink-2, #C3D0EA); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sql-rec-score { font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--sq-ink, #EAF1FF); }
+.sql-rec-delta { font-family: 'DM Sans', sans-serif; font-weight: 700; min-width: 42px; text-align: right; }
+.sql-rec-win .sql-rec-delta { color: #7BE495; }
+.sql-rec-lose .sql-rec-delta { color: #FFB3A0; }
+.sql-rec-draw .sql-rec-delta { color: #FFD98A; }
+.sql-rec-dust { font-size: 12px; color: var(--sq-sun, #FFC53D); min-width: 46px; text-align: right; }
+
+/* ---------------------------------------------------------------------------
+   3 · 天梯榜
+   --------------------------------------------------------------------------- */
+.sql-podiums { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+.sql-podium { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 14px 8px 12px; border-radius: 18px; background: rgba(255, 255, 255, .05); border: 1px solid var(--sq-line, rgba(150, 180, 255, .16)); }
+.sql-podium-1 { background: linear-gradient(180deg, rgba(255, 197, 61, .26), rgba(255, 197, 61, .05)); border-color: rgba(255, 197, 61, .48); transform: translateY(-6px); }
+.sql-podium-2 { background: linear-gradient(180deg, rgba(195, 208, 234, .20), rgba(195, 208, 234, .04)); }
+.sql-podium-3 { background: linear-gradient(180deg, rgba(255, 122, 89, .20), rgba(255, 122, 89, .04)); }
+.sql-podium.is-me { outline: 2px solid var(--sq-sun, #FFC53D); outline-offset: 2px; }
+.sql-podium.is-empty { opacity: .35; }
+.sql-podium-rank { position: absolute; top: 8px; left: 10px; font-size: 12px; font-weight: 800; color: var(--sq-muted, #93A5C6); }
+.sql-podium-av { font-size: 30px; line-height: 1.2; }
+.sql-podium b { font-size: 13.5px; color: var(--sq-ink, #EAF1FF); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sql-podium i { font-style: normal; font-size: 11.5px; color: var(--sq-muted, #93A5C6); }
+.sql-podium em { font-style: normal; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 16px; color: var(--sq-sun, #FFC53D); }
+.sql-podium u, .sql-rank u { text-decoration: none; font-size: 10px; padding: 1px 6px; border-radius: 999px; color: #8DE6DF; background: rgba(53, 197, 190, .18); }
+
+.sql-rank-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; max-height: 260px; overflow: auto; }
+.sql-rank { display: grid; grid-template-columns: 30px 30px minmax(0, 1fr) auto auto auto; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 12px; font-size: 13px; background: rgba(255, 255, 255, .04); }
+.sql-rank.is-me { background: rgba(255, 197, 61, .16); }
+.sql-rank-no { font-family: 'DM Sans', sans-serif; font-weight: 700; color: var(--sq-muted, #93A5C6); }
+.sql-rank-av { font-size: 18px; text-align: center; }
+.sql-rank b { color: var(--sq-ink, #EAF1FF); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sql-rank-tier { font-size: 11.5px; padding: 2px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); }
+.sql-rank-score { font-family: 'DM Sans', sans-serif; font-weight: 800; color: var(--sq-sun, #FFC53D); }
+.sql-board-tip { margin: 10px 0 0; font-size: 12px; color: var(--sq-muted, #93A5C6); }
+
+/* ---------------------------------------------------------------------------
+   4 · 对局（并排进度条 + 倒计时环 + 四选一）
+   --------------------------------------------------------------------------- */
+.sql-duel { display: grid; grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr); align-items: center; gap: 14px; margin-bottom: 16px; padding: 14px 18px; border-radius: 22px; background: var(--sq-surface, rgba(14, 20, 48, .7)); border: 1px solid var(--sq-line, rgba(150, 180, 255, .20)); }
+.sql-duel-side { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.sql-duel-side.is-opp { flex-direction: row-reverse; text-align: right; }
+.sql-duel-av { font-size: 30px; line-height: 1; }
+.sql-duel-side > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sql-duel-side b { font-size: 13.5px; color: var(--sq-ink, #EAF1FF); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sql-duel-side em { font-style: normal; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 20px; color: var(--sq-sun, #FFC53D); }
+.sql-duel-side.is-opp em { color: #FFA9B6; }
+.sql-duel-pips { display: flex; gap: 4px; margin-left: auto; }
+.sql-duel-side.is-opp .sql-duel-pips { margin-left: 0; margin-right: auto; }
+.sql-duel-pips i { width: 9px; height: 9px; border-radius: 3px; background: rgba(255, 255, 255, .16); }
+.sql-duel-side.is-me .sql-duel-pips i.is-on { background: #34C759; }
+.sql-duel-side.is-opp .sql-duel-pips i.is-on { background: #EE5A6F; }
+.sql-duel-vs { text-align: center; font-family: var(--sq-display, 'ZCOOL QingKe HuangYou', sans-serif); font-size: 18px; letter-spacing: 2px; color: var(--sq-muted, #93A5C6); }
+@media (max-width: 720px) { .sql-duel { grid-template-columns: minmax(0, 1fr); } .sql-duel-vs { display: none; } }
+
+.sql-quiz { padding: 20px 24px 22px; border-radius: 26px; background: var(--sq-surface, rgba(14, 20, 48, .74)); border: 1px solid var(--sq-line, rgba(150, 180, 255, .20)); box-shadow: var(--sq-shadow, 0 20px 46px rgba(0, 0, 0, .45)); position: relative; }
+.sql-quiz-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.sql-quiz-no { font-size: 13px; font-weight: 700; color: var(--sq-ink, #EAF1FF); }
+.sql-quiz-kp { font-size: 12px; padding: 3px 10px; border-radius: 999px; color: #8DE6DF; background: rgba(53, 197, 190, .18); }
+.sql-question { margin: 0 0 16px; font-size: 20px; line-height: 1.65; color: var(--sq-ink, #EAF1FF); font-weight: 600; }
+
+.sql-ring { position: relative; width: 62px; height: 62px; margin-left: auto; flex: none; }
+.sql-ring svg { width: 62px; height: 62px; transform: rotate(-90deg); }
+.sql-ring circle { fill: none; stroke-width: 7; stroke-linecap: round; }
+.sql-ring-bg { stroke: rgba(255, 255, 255, .14); }
+.sql-ring-fg { stroke: #34C759; transition: stroke-dashoffset .2s linear, stroke .3s ease; }
+.sql-ring b { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-size: 20px; font-weight: 800; color: var(--sq-ink, #EAF1FF); }
+.sql-ring.is-hurry b { color: #FFB3A0; }
+.sql-ring.is-hurry { animation: sql-pulse .9s ease-in-out infinite; }
+@keyframes sql-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+
+.sql-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; }
+.sql-opt { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; cursor: pointer; font-family: inherit; text-align: left; font-size: 15px; color: var(--sq-ink, #EAF1FF); background: rgba(255, 255, 255, .06); border: 1.5px solid var(--sq-line, rgba(150, 180, 255, .20)); transition: transform .14s ease, background .14s ease, border-color .14s ease; }
+.sql-opt:hover:not(:disabled) { transform: translateY(-2px); background: rgba(255, 197, 61, .14); border-color: rgba(255, 197, 61, .55); }
+.sql-opt:disabled { cursor: default; }
+.sql-opt-no { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-family: 'DM Sans', sans-serif; font-weight: 800; font-size: 14px; color: #2A1A00; background: linear-gradient(135deg, #FFD75E, #FFA417); }
+.sql-opt-text { font-weight: 600; }
+.sql-opt.is-chosen { border-color: var(--sq-sun, #FFC53D); }
+.sql-opt.is-right { background: rgba(52, 199, 89, .22); border-color: #34C759; }
+.sql-opt.is-wrong { background: rgba(238, 90, 111, .20); border-color: #EE5A6F; animation: sql-shake .34s ease; }
+.sql-opt.is-timeout { background: rgba(245, 166, 35, .18); border-color: #F5A623; }
+@keyframes sql-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+.sql-hint { margin: 14px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--sq-muted, #93A5C6); }
+
+/* ---------------------------------------------------------------------------
+   5 · 结算与逐题回放
+   --------------------------------------------------------------------------- */
+.sql-result { position: relative; padding: 26px 26px 22px; margin-bottom: 18px; border-radius: 26px; text-align: center; border: 1px solid var(--sq-line, rgba(150, 180, 255, .20)); background:
+    radial-gradient(90% 120% at 50% 0%, rgba(255, 197, 61, .20), transparent 62%),
+    var(--sq-surface, rgba(14, 20, 48, .76)); }
+.sql-result.is-down { background: radial-gradient(90% 120% at 50% 0%, rgba(238, 90, 111, .18), transparent 62%), var(--sq-surface, rgba(14, 20, 48, .76)); }
+.sql-result.is-flat { background: radial-gradient(90% 120% at 50% 0%, rgba(53, 197, 190, .18), transparent 62%), var(--sq-surface, rgba(14, 20, 48, .76)); }
+.sql-result-head { position: relative; z-index: 1; }
+.sql-result-ic { font-size: 52px; line-height: 1.1; }
+.sql-result-head h2 { margin: 6px 0 4px; font-size: 30px; font-family: var(--sq-display, 'ZCOOL QingKe HuangYou', sans-serif); letter-spacing: 2px; color: #FFF7E0; }
+.sql-result-head p { margin: 0; font-size: 13.5px; color: var(--sq-ink-2, #C3D0EA); }
+.sql-result-badge { position: absolute; top: 18px; right: 20px; opacity: .95; }
+@media (max-width: 720px) { .sql-result-badge { display: none; } }
+.sql-result-rows { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin: 18px 0 0; text-align: left; }
+.sql-result-rows > div { padding: 11px 14px; border-radius: 14px; background: rgba(255, 255, 255, .06); }
+.sql-result-rows i { font-style: normal; display: block; font-size: 11.5px; color: var(--sq-muted, #93A5C6); margin-bottom: 3px; }
+.sql-result-rows b { font-size: 16px; color: var(--sq-ink, #EAF1FF); font-family: 'DM Sans', sans-serif; }
+.sql-result-rows b em { font-style: normal; color: var(--sq-muted, #93A5C6); margin: 0 4px; }
+.sql-result-rows .sql-delta.is-up, .sql-result.is-up .sql-delta { color: #7BE495; }
+.sql-result.is-down .sql-delta { color: #FFB3A0; }
+.sql-promote { margin: 14px 0 0; font-size: 14px; font-weight: 700; color: var(--sq-sun, #FFC53D); }
+.sql-result-acts { display: flex; justify-content: center; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+.sql-result-acts .sql-btn-play { flex: 0 1 260px; }
+
+.sql-rp-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; max-height: 620px; overflow: auto; }
+.sql-rp { padding: 13px 15px; border-radius: 16px; background: rgba(255, 255, 255, .05); border-left: 4px solid rgba(255, 255, 255, .2); }
+.sql-rp.is-right { border-left-color: #34C759; }
+.sql-rp.is-wrong { border-left-color: #EE5A6F; }
+.sql-rp-top { display: flex; align-items: center; gap: 9px; margin-bottom: 7px; }
+.sql-rp-no { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 800; color: #2A1A00; background: linear-gradient(135deg, #FFD75E, #FFA417); }
+.sql-rp-kp { font-size: 11.5px; padding: 2px 9px; border-radius: 999px; color: #8DE6DF; background: rgba(53, 197, 190, .16); }
+.sql-rp-tag { margin-left: auto; font-size: 12px; font-weight: 700; }
+.sql-rp.is-right .sql-rp-tag { color: #7BE495; }
+.sql-rp.is-wrong .sql-rp-tag { color: #FFB3A0; }
+.sql-rp-q { margin: 0 0 8px; font-size: 14.5px; line-height: 1.6; color: var(--sq-ink, #EAF1FF); }
+.sql-rp-a { margin: 0; display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12.5px; color: var(--sq-muted, #93A5C6); }
+.sql-rp-a .is-answer { color: #7BE495; font-weight: 700; }
+.sql-rp-hint { margin: 8px 0 0; font-size: 12px; color: var(--sq-muted, #93A5C6); }
+
+/* ---------------------------------------------------------------------------
+   6 · 轻提示
+   --------------------------------------------------------------------------- */
+.sql-toast { position: fixed; z-index: 90; left: 50%; bottom: 96px; transform: translate(-50%, 18px); opacity: 0; pointer-events: none; max-width: min(88vw, 460px); padding: 12px 20px; border-radius: 16px; font-size: 13.5px; line-height: 1.6; text-align: center; color: #EAF1FF; background: rgba(16, 22, 52, .95); border: 1px solid var(--sq-line, rgba(150, 180, 255, .22)); box-shadow: 0 20px 44px rgba(0, 0, 0, .5); transition: opacity .22s ease, transform .22s ease; }
+.sql-toast.is-on { opacity: 1; transform: translate(-50%, 0); }
+.sql-toast.is-ok { border-color: rgba(52, 199, 89, .6); color: #B6F5C6; }
+.sql-toast.is-no { border-color: rgba(238, 90, 111, .6); color: #FFC7CF; }
+
+/* 兼容不带 color-mix 的旧内核：段位阶梯与榜单标签退回半透明底色 */
+@supports not (background: color-mix(in srgb, red 10%, transparent)) {
+  .sql-tier-ladder li { background: rgba(255, 255, 255, .07); border-color: var(--sq-line, rgba(150, 180, 255, .2)); }
+  .sql-rank-tier { background: rgba(255, 255, 255, .08); }
+}

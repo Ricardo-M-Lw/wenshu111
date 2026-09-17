@@ -12,12 +12,14 @@
 |----|------|------|------|
 | 学生端 | `13800000001` | `123456` | 林小明（八年级） |
 | 学生端 | `xiaoming` | `123456` | 同一账号的用户名登录 |
-| 管理端 | `teacher` | `123456` | 教师：经营看板 + 题库 + 错因字典 + 会员成员 |
-| 管理端 | `admin` | `admin123` | 运营：教师全部权限 + 会员订单与收入 |
+| 管理端 | `admin` | `admin123` | 运营：经营看板 + 题库 + 错因字典 + 会员订单 / 会员成员 |
 
-登录页提供「课堂演示账号」一键填入按钮（学生 / 教师 / 运营各一个）；也支持自助注册（验证码在演示环境会直接回显）。
+登录页提供「课堂演示账号」一键填入按钮（学生 / 运营各一个）；也支持自助注册（验证码在演示环境会直接回显）。
 
-登录后按角色自动分流：学生进 `frontend/pages/student/home.html`，教师 / 运营进 `frontend/pages/admin/console.html`；学生若直接访问管理端页面，会被页面守卫送回学习首页。
+登录后按角色自动分流：学生进 `frontend/pages/student/home.html`，运营进 `frontend/pages/admin/console.html`；学生若直接访问管理端页面，会被页面守卫送回学习首页。
+
+> **产品定位**：面向 **学生与家长**（家长与学生共用同一入口，「学习报告」页即家长视角）。
+> 因此**不设教师端、不设班级课堂**——原教师角色与班级维度已下线，教学引导全部由智能体「小问」承担。
 
 会员领航舱的付款也走演示逻辑：用 13800000001 下单会**直接支付成功**并弹出开通回执，不接真实支付网关（付款码是每次随机生成的）。
 
@@ -31,7 +33,7 @@ wenshu-fullstack/
 │   │   ├── auth/                # 登录 / 注册
 │   │   │   ├── login.html
 │   │   │   └── register.html
-│   │   ├── student/             # 学生端 12 页
+│   │   ├── student/             # 学生端 13 页
 │   │   │   ├── home.html        # 学习首页
 │   │   │   ├── classroom.html   # 五步讲题课堂（黑板 + 智能体悬浮面板）
 │   │   │   ├── agent.html       # 问数智能体独立页
@@ -39,15 +41,16 @@ wenshu-fullstack/
 │   │   │   ├── correction.html  # 错题订正（错题本 + 错因雷达图）
 │   │   │   ├── result.html      # 学习结果
 │   │   │   ├── planet.html      # 答题星球
+│   │   │   ├── ladder.html      # 星际天梯（异步排位赛：段位 / 天梯榜 / 家长守护）
 │   │   │   ├── checkin.html     # 签到积分
 │   │   │   ├── badge.html       # 徽章挑战
 │   │   │   ├── level.html       # 等级体系 / 我的
 │   │   │   ├── report.html      # 学习报告（总览 / 掌握 / 记录 / 提醒）
 │   │   │   └── vip.html         # 会员领航舱（VIP 充值 · 三档方案 / 随机付款码）
-│   │   └── admin/               # 管理端（教师 / 运营）
+│   │   └── admin/               # 管理端（运营）
 │   │       └── console.html     # 管理控制台：经营概览 / 题库 / 错因字典 / 会员订单 / 会员成员
 │   ├── src/
-│   │   ├── styles/{common.css, space.css, admin.css}   # 公共样式 + 星途宇宙主题 + 控制台样式
+│   │   ├── styles/{common.css, space.css, ladder.css, admin.css}   # 公共样式 + 星途宇宙主题 + 天梯样式 + 控制台样式
 │   │   └── scripts/
 │   │       ├── auth.js          # 登录态、请求封装、NDJSON 流式读取、页面守卫、头像读写
 │   │       ├── auth-page.js     # 登录 / 注册页交互
@@ -67,6 +70,7 @@ wenshu-fullstack/
 │   │       ├── correction.js    # 错题订正
 │   │       ├── report.js        # 学习报告（总览 / 掌握 / 学习记录 / 提醒设置）
 │   │       ├── vip.js           # 会员领航舱（方案卡选择 / Canvas 随机付款码 / 支付与成功弹窗）
+│   │       ├── ladder.js        # 星际天梯（段位主界面 / 限时答题 / 结算回放 / 天梯榜 / 家长守护）
 │   │       ├── admin.js         # 管理控制台（模块路由 / 看板 / 题库 / 错因字典 / 订单 / 成员）
 │   ├── assets/images/           # mascot/xiaowen/*（小问 30 态形象包）、mascot/rocket.svg、knowledge/*.svg
 │   ├── assets/favicon.svg       # 手绘表情星球图标（16 个页面统一引用）
@@ -81,7 +85,7 @@ wenshu-fullstack/
 │   ├── deploy-server.sh            # 云服务器一键部署（Node + systemd + Nginx + 可选 certbot）
 │   └── keepalive.ps1               # 本机保活：定时 ping /api/health（-Once / -InstallTask）
 │
-├── tests/                       # 冒烟测试（node tests/run-all.js，12 个套件 / 默认全部离线可跑）
+├── tests/                       # 冒烟测试（node tests/run-all.js，13 个套件 / 默认全部离线可跑）
 │
 ├── backend/                     # 后端（Express.js）
 │   ├── src/
@@ -90,12 +94,12 @@ wenshu-fullstack/
 │   │   ├── permissions.js       # 权限与基座：角色 + 权限码（模块:资源:动作，对齐若依）
 │   │   ├── cache/index.js       # 缓存层（Redis 语义）：会话 / 注销标记 / 验证码 / 频率计数
 │   │   ├── db/                  # 数据库层
-│   │   │   ├── schema.js        # 14 张表的唯一事实来源（列 / 主键 / 索引 / 注释）
+│   │   │   ├── schema.js        # 18 张表的唯一事实来源（列 / 主键 / 索引 / 注释）
 │   │   │   ├── table.js         # 轻量表引擎（内存驱动，调用面等价 MyBatis Mapper）
 │   │   │   ├── dump-sql.js      # 生成建表脚本（npm run db:schema）
 │   │   │   └── schema.sql       # 生成的 DDL
-│   │   ├── repositories/        # 持久层：user / learning / quiz / gamification / study / vip / wallet
-│   │   ├── services/            # 业务层：auth / gamification / vip / wallet / access（统一返回 { status, body }）
+│   │   ├── repositories/        # 持久层：user / learning / quiz / gamification / study / vip / wallet / ladder
+│   │   ├── services/            # 业务层：auth / gamification / vip / wallet / ladder / access（统一返回 { status, body }）
 │   │   ├── middleware/          # 接入层：统一异常 / 鉴权与权限码 / 限流 / 参数校验 / gzip 压缩（零依赖）
 │   │   ├── agent/               # 问数智能体
 │   │   │   ├── index.js         # 统一入口：上下文 → 护栏 → 选提供方 → 记忆
@@ -109,8 +113,9 @@ wenshu-fullstack/
 │   │   │       └── openai.js    # OpenAI 兼容 function calling
 │   │   ├── models/
 │   │   │   ├── mockData.js      # 用户 / 知识点 / 学习记录 / 等级（日期动态推算）
-│   │   │   └── lessons.js       # 3 知识点 × 5 讲题步骤（含气泡、图形、检查点）
-│   │   ├── routes/              # auth / learning / quiz / gamification / report / dashboard / vip / wallet / agent / admin
+│   │   │   ├── lessons.js       # 3 知识点 × 5 讲题步骤（含气泡、图形、检查点）
+│   │   │   └── ladderBank.js    # 星际天梯：确定性题库 + 九段星阶 + 计分与段位保护规则
+│   │   ├── routes/              # auth / learning / quiz / gamification / report / dashboard / vip / wallet / ladder / agent / admin
 │   │   └── utils/auth.js        # HMAC 令牌 + 加盐密码哈希
 │   ├── .env                     # 本地配置（含真实密钥，已 gitignore / dockerignore）
 │   ├── .env.example             # 环境变量模板（上线照着填）
@@ -123,7 +128,11 @@ wenshu-fullstack/
 ├── render.yaml                  # 路线一：Render Blueprint 一键部署配置（含 DeepSeek 环境变量）
 ├── fly.toml                     # 路线一备选：Fly.io 配置
 ├── .dockerignore                # 构建上下文排除（重点是 **/.env）
+├── 计划清单.md                  # 【总】技术债 20 条 + 新增方向 + 天梯赛（联机挑战）设计方案
 ├── 部署文档.md                  # 四条部署路线 + 上线自查清单
+├── 开发文档.md                  # 每日改动记录（需求 → 改动 → 验证）
+├── 待改进清单.md                # 第 5 天的代码扫描（绝大部分已修完，剩余并入计划清单）
+├── 同行方案借鉴分析.md          # 与同组线上站点 / 小猿口算等的对照
 └── README.md
 ```
 
@@ -140,7 +149,7 @@ wenshu-fullstack/
 ```text
 用户端（学生 / 家长）      ──┐
                             ├── HTTPS / JSON ──▶ 服务端：Java + Spring Boot + 若依（权限 + 业务）
-管理端（教师 / 运营）      ──┘                        │
+管理端（运营）           ──┘                        │
                                                      ├──▶ MySQL       业务数据（业务主记录）
                                                      ├──▶ Redis       缓存与短期状态
                                                      ├──▶ 图片存储     文件（头像 / 拍照 / 手绘图）
@@ -155,12 +164,12 @@ wenshu-fullstack/
 | 层 | 目标选型 | 在问数星途承载什么 | 当前实现（一期） |
 |----|----------|--------------------|------------------|
 | 用户端 | Vue 3 + Vite（Web） | 学生端：首页 / 讲题课堂 / 问数智能体 / 学习报告 / 答题星球 / 会员领航舱 | 原生多页 HTML + CSS + JS（`frontend/pages`） |
-| 管理端 | 若依 RuoYi-Vue 内置后台 | 教师 / 运营：知识点与题库管理、错因字典、会员方案与订单、数据看板 | 原生控制台 `frontend/pages/admin/console.html` + `/api/admin/*`（权限码校验） |
+| 管理端 | 若依 RuoYi-Vue 内置后台 | 运营：知识点与题库管理、错因字典、会员方案与订单、数据看板 | 原生控制台 `frontend/pages/admin/console.html` + `/api/admin/*`（权限码校验） |
 | 接入层 | Spring Boot + Spring MVC | HTTPS / JSON 接口、参数校验、统一异常、鉴权过滤 | Express 路由（`backend/src/routes`） |
 | 业务层 | Spring Boot Service | 认证、讲题脚本、检查点判分、错因诊断、等级与积分、学习报告、会员订单 | `backend/src` 各模块 |
-| 权限与基座 | 若依 RuoYi | 登录权限 / 菜单管理 / 代码生成；角色（学生 / 教师 / 运营）与按钮级权限 | HMAC 令牌 + 会话缓存 + 角色 / 权限码（`backend/src/permissions.js`、`middleware/auth.js`） |
+| 权限与基座 | 若依 RuoYi | 登录权限 / 菜单管理 / 代码生成；角色（学生 / 运营）与按钮级权限 | HMAC 令牌 + 会话缓存 + 角色 / 权限码（`backend/src/permissions.js`、`middleware/auth.js`） |
 | 持久层 | MyBatis / MyBatis-Plus | 知识点、讲题步骤、答题记录、学习会话、错因、会员订单的 SQL 映射 | 仓储层 `repositories/` + 轻量表引擎 `db/table.js`（与 `models/mockData.js` 同一份数据） |
-| 数据库 | MySQL（主）/ PostgreSQL（扩展）/ 达梦 DM、金仓 KingbaseES（国产适配） | 业务数据主存储：表、主键、SQL、索引 | 14 张表定义 + 生成 DDL（`db/schema.js` → `schema.sql`），默认内存驱动（`DB_DRIVER=mysql` 预留） |
+| 数据库 | MySQL（主）/ PostgreSQL（扩展）/ 达梦 DM、金仓 KingbaseES（国产适配） | 业务数据主存储：表、主键、SQL、索引 | 18 张表定义 + 生成 DDL（`db/schema.js` → `schema.sql`），默认内存驱动（`DB_DRIVER=mysql` 预留） |
 | 缓存 | Redis | 热点列表少查库、登录状态判会话有效、频率计数防刷 | 缓存层 `cache/`：会话 / 注销标记 / 验证码 / 频率计数，Redis 语义（`CACHE_DRIVER=redis` + `REDIS_URL`，连不上自动降级） |
 | 文件存储 | 对象存储 / 图片服务（MinIO 等） | 头像、错题拍照、手绘图形、讲题配图 | 头像支持 emoji / 文字 / 图片链接 / data URL |
 | AI 服务 | 大模型 + 智能体（RAG 知识库） | 问数智能体：三角色对话、引导式教学五步、不泄答案护栏、工具调用 | 配置中心统一管理（`config/index.js`）+ 自研规则引擎（离线兜底）+ OpenAI 兼容 function calling（默认接 DeepSeek） |
@@ -186,7 +195,7 @@ uni-app（小程序 / App / Web）      Electron（桌面应用外壳）
 | Vue 3 | 单页应用、组件化的用户端与后台 | **目标前端主力**，学生端与会员页组件化重构 |
 | React | 生态大、招聘面广 | 备选方案，同一项目不混用 |
 | uni-app | 一套代码出小程序 / App / Web | 后续移动端（家长微信小程序端、学生端 App） |
-| Electron | 桌面应用外壳 | 后续桌面端（课堂大屏、教师工作台） |
+| Electron | 桌面应用外壳 | 后续桌面端（家庭大屏学习舱） |
 
 ### 四、后端框架认知
 
@@ -224,7 +233,7 @@ uni-app（小程序 / App / Web）      Electron（桌面应用外壳）
 
 | 用途 | 说明 | 在问数星途中的落位 |
 |------|------|--------------------|
-| 热点列表 | 高频读取的数据放缓存，少查数据库 | 知识点树、班级榜单、会员方案与价格 |
+| 热点列表 | 高频读取的数据放缓存，少查数据库 | 知识点树、星系天梯榜、会员方案与价格 |
 | 登录状态 | 保存会话，判断登录是否有效 | 令牌 + 会话状态，支持多端登录与踢下线 |
 | 频率计数 | 计数器，防止频繁请求 | 短信验证码、智能体问答、一键生成学习报告的限流 |
 
@@ -238,8 +247,8 @@ uni-app（小程序 / App / Web）      Electron（桌面应用外壳）
 | 2 | 接入 Redis：登录态、验证码与智能体限流、知识点树缓存 | 主记录仍在 MySQL |
 | 3 | 后端换基座：业务逻辑平移到 Java + Spring Boot + 若依 | 接口路径与返回结构保持不变，前端零改动 |
 | 4 | 前端组件化：原生多页 → Vue 3 + Vite | 直接复用 `qw-*` / `sq-*` 类名与 `space.css` 主题 |
-| 5 | 管理端：基于若依内置后台做教师 / 运营端 | 题库、错因字典、会员订单、数据看板 |
-| 6 | 多端：uni-app（家长小程序 / 学生 App）、Electron（课堂大屏、教师工作台） | 复用同一套接口契约 |
+| 5 | 管理端：基于若依内置后台做运营端 | 题库、错因字典、会员订单、数据看板 |
+| 6 | 多端：uni-app（家长小程序 / 学生 App）、Electron（家庭大屏学习舱） | 复用同一套接口契约 |
 | 7 | 可选：MQTT Broker 接入智能手写板 / 摄像头传感器 | 数据上报与指令下发，按产品需要接入 |
 
 ### 八、迁移不变量（保证平滑替换）
@@ -270,7 +279,8 @@ npm start          # http://localhost:3000
 | 学习报告 | http://localhost:3000/pages/student/report.html |
 | 错题订正 | http://localhost:3000/pages/student/correction.html |
 | 会员领航舱 | http://localhost:3000/pages/student/vip.html |
-| 管理控制台（教师 / 运营） | http://localhost:3000/pages/admin/console.html |
+| 星际天梯 | http://localhost:3000/pages/student/ladder.html |
+| 管理控制台（运营） | http://localhost:3000/pages/admin/console.html |
 
 生成数据库建表脚本（表结构唯一事实来源在 `backend/src/db/schema.js`）：
 
@@ -382,7 +392,7 @@ curl -X POST http://localhost:3000/api/agent/chat \
 项目自带一套不依赖浏览器和网络的冒烟测试（会自己拉起临时后端）：
 
 ```bash
-node tests/run-all.js                  # 12 个套件，默认用内置规则引擎（离线、结果确定）
+node tests/run-all.js                  # 13 个套件，默认用内置规则引擎（离线、结果确定）
 AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需要外网与 LLM_API_KEY）
 ```
 
@@ -393,15 +403,16 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 | 测试文件 | 覆盖内容 |
 |----------|----------|
 | `tests/api-smoke.js` | 认证 / 学习 / 答题 / 学习报告 / 会员充值接口 |
-| `tests/layers-smoke.js` | 分层架构：配置层 / 表结构与索引 / 缓存层 / 仓储层 / 权限层 / 服务层 / 管理端权限（37 条断言） |
+| `tests/layers-smoke.js` | 分层架构：配置层 / 表结构与索引 / 缓存层 / 仓储层 / 权限层 / 服务层 / 管理端权限（39 条断言） |
 | `tests/agent-smoke.js` | 智能体 15 条意图（问候、提示、判题、变式、算术、情绪、拦截…） |
 | `tests/agent-persona-smoke.js` | 三种角色的回答差异与越权拦截 |
 | `tests/agent-quota-smoke.js` | AI 对话配额：免费 10 次/天、用完 429、星尘 20=5 次 / 星钻 1=10 次、余额不足被拒、会员不限次（29 条断言） |
-| `tests/page-check.js` | 15 个页面（含会员领航舱、管理控制台）+ 全部静态资源 + 「不泄答案」断言 |
+| `tests/page-check.js` | 16 个页面（含会员领航舱、星际天梯、管理控制台）+ 全部静态资源 + 「不泄答案」断言 |
 | `tests/dom-smoke.js` | 用轻量 DOM 真实执行每个页面的脚本（学生端 18 个入口 + 管理端 2 个入口），捕获运行时错误 |
 | `tests/classroom-ui-smoke.js` | 讲题课堂全流程：黑板 SVG 生成 → 步骤轨道 → 气泡讲解 → 检查点判题 → 推进下一步 |
 | `tests/xiaowen-ui-smoke.js` | 小问 30 态形象、状态机与「喊小问」语音唤醒（含防抖与麦克风让位） |
 | `tests/agent-ui-smoke.js` | 智能体前端全流程：建议 → 流式对话 → 时间戳 / 说话人 → 推荐灵感 → 语音降级 → 工具轨迹 → 反馈 → 切角色 → 报告卡片 |
+| `tests/ladder-smoke.js` | 星际天梯：开局不泄答案 / 服务端判分与计时 / 结算与段位保护 / 每日场次上限 / 家长守护 / 天梯榜 / 越权（50 条断言） |
 | `tests/llm-budget-smoke.js` | 大模型额度闸门：全站每日上限生效、超限自动退回离线引擎、降级原因可读、对话配额与大模型额度是两层（11 条断言） |
 
 ## 📡 API 接口文档
@@ -445,6 +456,18 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 | GET  | `/api/report/calendar` | 近 N 天学习日历 |
 | GET/PUT | `/api/report/settings` | 学习提醒设置 |
 
+### 星际天梯（异步排位赛）
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET  | `/api/ladder/season` | 当前赛季（名称 / 起止 / 剩余天数）与赛季规则 |
+| GET  | `/api/ladder/me` | 我的段位 / 积分 / 连胜 / 近 10 局战绩 + 今日场次额度 |
+| GET  | `/api/ladder/leaderboard?scope=season&limit=50` | 天梯榜（赛季 / 周榜） |
+| POST | `/api/ladder/guard` | 家长守护开关（复用学习时段 / 免打扰，开启时天梯关闭） |
+| POST | `/api/ladder/match` | 开一局：按段位抽 8 题，**只下发题面，不下发答案** |
+| GET  | `/api/ladder/match/:id` | 取本局进度（结算前不揭晓正确答案） |
+| POST | `/api/ladder/match/:id/answer` | 逐题提交，服务端判分，返回对错与耗时 |
+| POST | `/api/ladder/match/:id/finish` | 结算：算分、更新段位积分、写星尘流水（幂等） |
+
 ### 会员领航舱（VIP）
 | 方法 | 路径 | 说明 |
 |------|------|------|
@@ -453,14 +476,24 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 | POST | `/api/vip/order` | 按方案 + 渠道下单，返回随机付款码 `QWPAY:<渠道>:<订单号>:<24 位随机码>`（免费方案 400） |
 | POST | `/api/vip/pay` | 确认支付并开通 / 续期会员，返回打码手机号回执（重复支付 400、无效订单 404） |
 
-### 管理端（教师 / 运营）
+### 星际天梯（联机挑战 · 阶段 1 异步排位）
+- [x] 入口：星球 tab 下的 `/pages/student/ladder.html`，顶栏与底部导航都有「🛸 星际天梯」
+- [x] 九段星阶：陨石 → 流光 → 新星 → 行星 → 恒星 → 星团 → 星云 → 星系 → 星海之王（新号从 900 分「陨石」起步），段位徽章随段位换色换造型
+- [x] 一局规则：8 题 / 每题 20 秒，答对 100 分 + 剩余秒数 × 3（上限 45 分）；**服务端判分、答案结算后才揭晓**，全程不调大模型
+- [x] 积分结算：胜 +25 / 平 +10 / 负 -15，连胜 3 局起额外 +5（上限 +10），并带段位保护（掉不到段位地板以下）
+- [x] 星尘奖励：胜 12 / 平 8 / 负 3，写真实钱包流水（分类「星际天梯」，可在「我的 → 星钻收支记录」查到）
+- [x] 每日场次：免费版每天 3 局、会员每天 10 局，跨天自动重置，超限返回 429 并提示去开通领航员
+- [x] 家长守护一键开关（复用学习时段 / 免打扰设置，开启后开局直接 403 并说明原因）
+- [x] 界面：段位徽章 + 赛季规则卡 + 天梯榜前三名星台 + 近 10 局战绩；对局页并排进度条 / 倒计时环 / 连击粒子，结算页逐题回放
+
+### 管理端（运营）
 | 方法 | 路径 | 说明 | 权限码 |
 |------|------|------|--------|
 | GET | `/api/admin/overview` | 经营与学情看板：用户构成、学习完成率、星尘榜、订单收入、平台自检 | `admin:overview:read` |
 | GET | `/api/admin/questions` | 题库浏览（`?knowledgePointId=` 可按知识点过滤），**不下发正确答案** | `admin:question:list` |
 | GET | `/api/admin/error-types` | 错因字典 + 真实命中次数（按次数排序） | `admin:error-type:list` |
 | GET | `/api/admin/members` | 会员成员列表（手机号打码、到期日与有效状态） | `admin:member:list` |
-| GET | `/api/admin/orders` | 会员订单明细与收入合计（**仅运营角色**，教师访问返回 403） | `admin:order:list` |
+| GET | `/api/admin/orders` | 会员订单明细与收入合计（**仅运营角色**，学生访问返回 403） | `admin:order:list` |
 
 权限码统一写成「模块:资源:动作」，与若依的菜单 / 按钮权限一致：角色 → 权限码映射表在 `backend/src/permissions.js`，
 接口层只调用 `requirePermission(code)`，换成若依后由后台下发，路由代码不用改。
@@ -469,7 +502,7 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 
 ### 登录注册
 - [x] 记住我、演示账号一键填入，登录后自动回跳到原来要去的页面
-- [x] 三角色演示账号（学生 / 教师 / 运营）一键填入，按角色分流：学生进学习首页，教师 / 运营进管理控制台
+- [x] 演示账号（学生 / 运营）一键填入，按角色分流：学生进学习首页，运营进管理控制台
 - [x] 学生端页面登录守卫，未登录自动跳转登录页并回跳
 - [x] 短信验证码注册（演示环境回显验证码）、密码重置
 - [x] 个人资料 `GET/PATCH /api/auth/profile`：支持 emoji、文字、图片链接与 data URL 图片头像，带格式与长度校验
@@ -510,12 +543,22 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 - [x] 自绘 `qw-pnav` 顶部子导航（不依赖 Tailwind CDN）与渐变信息卡 + 装饰图形
 - [x] 所有日期 / 数值均来自接口，不出现写死的过期日期
 
-### 管理端（教师 / 运营）
+### 星际天梯（联机挑战 · 阶段 1 异步排位）
+- [x] 入口：星球 tab 下的 `/pages/student/ladder.html`，顶栏与底部导航都有「🛸 星际天梯」
+- [x] 九段星阶：陨石 → 流光 → 新星 → 行星 → 恒星 → 星团 → 星云 → 星系 → 星海之王（新号从 900 分「陨石」起步），段位徽章随段位换色换造型
+- [x] 一局规则：8 题 / 每题 20 秒，答对 100 分 + 剩余秒数 × 3（上限 45 分）；**服务端判分、答案结算后才揭晓**，全程不调大模型
+- [x] 积分结算：胜 +25 / 平 +10 / 负 -15，连胜 3 局起额外 +5（上限 +10），并带段位保护（掉不到段位地板以下）
+- [x] 星尘奖励：胜 12 / 平 8 / 负 3，写真实钱包流水（分类「星际天梯」，可在「我的 → 星钻收支记录」查到）
+- [x] 每日场次：免费版每天 3 局、会员每天 10 局，跨天自动重置，超限返回 429 并提示去开通领航员
+- [x] 家长守护一键开关（复用学习时段 / 免打扰设置，开启后开局直接 403 并说明原因）
+- [x] 界面：段位徽章 + 赛季规则卡 + 天梯榜前三名星台 + 近 10 局战绩；对局页并排进度条 / 倒计时环 / 连击粒子，结算页逐题回放
+
+### 管理端（运营）
 - 左侧模块栏 + 右侧内容区：经营概览 / 题库管理 / 错因字典 / 会员订单 / 会员成员，支持 `#hash` 直达
-- 经营概览：用户与角色、学习与内容、积分与会员三组指标 + 星尘榜前 5 + 平台自检（env / 数据库 / 缓存 / AI / 14 张表落地情况）
+- 经营概览：用户与角色、学习与内容、积分与会员三组指标 + 星尘榜前 5 + 平台自检（env / 数据库 / 缓存 / AI / 18 张表落地情况）
 - 题库浏览：按知识点筛选，展示题干、选项与提示；答案字段在后端就被剥掉，管理端同样看不到
 - 错因字典：释义 + 干预建议 + 真实命中次数（带条形比例）
-- 会员订单 / 成员：收入合计、渠道、支付状态、到期日；教师访问订单模块会被 403 拦下并给出「受限」提示
+- 会员订单 / 成员：收入合计、渠道、支付状态、到期日；学生访问订单模块会被 403 拦下并给出「受限」提示
 - 顶栏可切换白天 / 夜晚主题，退出登录会同时注销服务端会话
 
 ### 会员领航舱（VIP 充值）
@@ -601,7 +644,7 @@ AGENT_PROVIDER=live node tests/run-all.js   # 改测真实大模型链路（需�
 |------|------|
 | 前端 | 原生 HTML/CSS/JS 多页应用 + 自带主题样式（`common.css` / `space.css`）+ Lucide 图标（已本地化，不依赖外网） |
 | 后端 | Node.js + Express |
-| 数据 | 仓储层 + 轻量表引擎（内存驱动）+ 14 张表 DDL；Mock 数据按「今天」动态推算日期 |
+| 数据 | 仓储层 + 轻量表引擎（内存驱动）+ 18 张表 DDL；Mock 数据按「今天」动态推算日期 |
 | 缓存 | 缓存层（Redis 语义）：会话 / 注销标记 / 验证码 / 频率计数，配了 Redis 自动切换 |
 | 智能体 | 自研规则引擎（离线兜底）/ OpenAI 兼容 function calling（在线，默认接 DeepSeek），由 `AGENT_PROVIDER` 切换 |
 | 图案 | 自研 SVG 生成器 `frontend/src/scripts/space-art.js`（零依赖、无网络请求、无图床） |

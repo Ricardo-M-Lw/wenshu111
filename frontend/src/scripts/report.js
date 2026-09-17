@@ -579,10 +579,10 @@
 
       + '<section class="qw-card qw-setting-card">'
       + '<div class="qw-card-head"><h2>隐私与共享</h2><span>由你决定哪些数据可以被看到</span></div>'
-      + '<div class="qw-setting-row"><div class="qw-setting-text"><b>参与班级排行</b>'
-      + '<p>关闭后，你的名字不会出现在任何排行榜里。</p></div>' + switchButton('privacy.shareRanking', '参与班级排行') + '</div>'
-      + '<div class="qw-setting-row"><div class="qw-setting-text"><b>共享学习报告给老师</b>'
-      + '<p>开启后，老师可以看到你的掌握趋势与错因汇总。</p></div>' + switchButton('privacy.shareToTeacher', '共享学习报告给老师') + '</div>'
+      + '<div class="qw-setting-row"><div class="qw-setting-text"><b>参与星系排行榜</b>'
+      + '<p>关闭后，你的名字不会出现在天梯榜与任何排行榜里。</p></div>' + switchButton('privacy.shareRanking', '参与星系排行榜') + '</div>'
+      + '<div class="qw-setting-row"><div class="qw-setting-text"><b>共享学习报告给家长</b>'
+      + '<p>开启后，绑定你账号的家长可以看到掌握趋势与错因汇总。</p></div>' + switchButton('privacy.shareToFamily', '共享学习报告给家长') + '</div>'
       + '<div class="qw-setting-row"><div class="qw-setting-text"><b>匿名数据改进教学</b>'
       + '<p>只统计题型与错因，不包含姓名等身份信息。</p></div>' + switchButton('privacy.analytics', '匿名数据改进教学') + '</div>'
       + '</section>'
@@ -675,7 +675,7 @@
   function describeUser() {
     const user = (AUTH && AUTH.getUser()) || {};
     const name = user.nickname || user.name || '同学';
-    const meta = [user.grade, user.className].filter(Boolean).join(' · ');
+    const meta = [user.grade, user.school].filter(Boolean).join(' · ');
     return name + (meta ? ' · ' + meta : '') + ' · 数据来自讲题课堂与标准题训练';
   }
 
@@ -701,7 +701,7 @@
     const user = (AUTH && AUTH.getUser()) || {};
     const name = user.nickname || user.name || '同学';
     const initial = String(name).trim().slice(-1) || '学';
-    const meta = [user.grade, user.className].filter(Boolean).join(' · ') || '学生';
+    const meta = [user.grade, user.school].filter(Boolean).join(' · ') || '学生';
 
     const nav = document.createElement('nav');
     nav.className = 'qw-pnav';
